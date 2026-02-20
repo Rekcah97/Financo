@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body } from "express-validator";
-import { createUser } from "../controllers/auth.controller.js";
+import { createUser, loginUser } from "../controllers/auth.controller.js";
 
 const router = Router();
 
@@ -13,6 +13,13 @@ router.post(
     body("password", "enter a strong Password").isStrongPassword(),
   ],
   createUser,
+);
+
+//Router 2
+router.post(
+  "/signin",
+  [body("email", "enter a valid Email").normalizeEmail().isEmail()],
+  loginUser,
 );
 
 export default router;
