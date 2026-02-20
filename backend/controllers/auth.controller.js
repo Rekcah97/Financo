@@ -85,8 +85,22 @@ export const loginUser = async (req, res) => {
       expiresIn: "1h",
     });
 
-    return res.status(200).json({ success: true, accessToken });
-  } catch {
+    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+      expiresIn: "1d",
+    });
+
+    console.log(accessToken);
+    console.log(refreshToken);
+
+    await prisma.refreshToken.create({
+      data: {
+        token: refreshToken,
+        userId: payload.id,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+    });
+    return res.status(200).json({ success: true, accessToken, refreshToken });
+  } catch (err) {
     return res
       .status(500)
       .json({ success: false, msg: "Internal Server Error", err });
