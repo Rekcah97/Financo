@@ -165,3 +165,29 @@ export const refreshAccessToken = async (req, res) => {
       .json({ success: false, msg: "Internal Server Error", err });
   }
 };
+
+//Route 4
+export const logoutUser = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "refresh token not found" });
+    }
+
+    await prisma.refreshToken.delete({
+      where: {
+        token: refreshToken,
+      },
+    });
+
+    return res
+      .status(200)
+      .json({ success: true, msg: "Logged Out successfully" });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, msg: "Internal Server Error" });
+  }
+};
