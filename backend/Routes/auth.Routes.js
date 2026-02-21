@@ -5,6 +5,7 @@ import {
   loginUser,
   logoutUser,
   refreshAccessToken,
+  resentVerificationCode,
   verifyEmail,
 } from "../controllers/auth.Controller.js";
 import { verifyJWT } from "../middleware/verifyJWT.middleware.js";
@@ -37,5 +38,8 @@ router.post("/logout", logoutUser);
 
 //Route 5
 router.post("/verifyEmail", verifyJWT, verifyEmail);
+
+//Route 6
+router.post("/resentOtp", verifyJWT, resentVerificationCode);
 
 export default router;

@@ -45,7 +45,6 @@ export const createUser = async (req, res) => {
       newUser.id,
       newUser.email,
     );
-    console.log(inisiateVerification.success);
 
     if (inisiateVerification.success === false) {
       return res.status(500).json({
@@ -269,5 +268,48 @@ export const verifyEmail = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, msg: "Internal Server Error", err });
+  }
+};
+
+//Route 6
+export const resentVerificationCode = async (req, res) => {
+  try {
+    const userId = Number(req.user.id);
+    const { email } = req.body;
+
+    await prisma.verificationCode.deleteMany({
+      where: {
+        userId,
+      },
+    });
+
+    const user = prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (user.verified) {
+      return res.status(400).json({
+        success: false,
+        msg: "user is already verified. Try logging in",
+      });
+    }
+
+    const resentCode = await sendVerificationOTP(userId, email);
+
+    if (!resentCode.success) {
+      return res
+        .status(500)
+        .json({ success: false, msg: "Internal Server Error" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      msg: "Verification code has been sent to your id",
+    });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, msg: "Internal Server Error" });
   }
 };
