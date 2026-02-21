@@ -5,7 +5,9 @@ import {
   loginUser,
   logoutUser,
   refreshAccessToken,
+  verifyEmail,
 } from "../controllers/auth.Controller.js";
+import { verifyJWT } from "../middleware/verifyJWT.middleware.js";
 
 const router = Router();
 
@@ -32,5 +34,8 @@ router.post("/refresh", refreshAccessToken);
 
 //Route 4
 router.post("/logout", logoutUser);
+
+//Route 5
+router.post("/verifyEmail", verifyJWT, verifyEmail);
 
 export default router;

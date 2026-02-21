@@ -2,6 +2,7 @@ import prisma from "../config/db.config.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { sendVerificationOTP } from "../utils/sendVerificationOtp.js";
 
 //Route 1
 export const createUser = async (req, res) => {
@@ -40,6 +41,18 @@ export const createUser = async (req, res) => {
       },
     });
 
+    const inisiateVerification = await sendVerificationOTP(
+      newUser.id,
+      newUser.email,
+    );
+    console.log(inisiateVerification.success);
+
+    if (inisiateVerification.success === false) {
+      return res.status(500).json({
+        success: false,
+        msg: "Internal Server Error",
+      });
+    }
     return res.status(201).json({ success: true, newUser });
   } catch (err) {
     return res
@@ -189,5 +202,72 @@ export const logoutUser = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, msg: "Internal Server Error" });
+  }
+};
+
+//Route 5
+export const verifyEmail = async (req, res) => {
+  try {
+    const userId = Number(req.user.id);
+    const { otp } = req.body;
+
+    if (!otp) {
+      return res
+        .status(400)
+        .json({ success: false, msg: "otp cannot be empty" });
+    }
+
+    const otpDetails = await prisma.verificationCode.findFirst({
+      where: {
+        userId,
+      },
+    });
+
+    if (!otpDetails) {
+      return res.status(404).json({
+        success: false,
+        msg: "account record doesnt exist or account is already verified",
+      });
+    }
+
+    const isExpired = otpDetails.expiresAt.getTime() <= Date.now();
+
+    if (isExpired) {
+      await prisma.verificationCode.delete({
+        where: {
+          id: otpDetails.id,
+        },
+      });
+      return res.status(400).json({
+        success: false,
+        msg: "OTP is expired",
+      });
+    }
+    const compareOTP = await bcrypt.compare(otp, otpDetails.code);
+
+    if (!compareOTP) {
+      return res.status(400).json({ success: false, msg: "incorrect OTP" });
+    }
+
+    await prisma.verificationCode.delete({
+      where: {
+        id: otpDetails.id,
+      },
+    });
+
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        verified: true,
+      },
+    });
+
+    return res.status(200).json({ success: true, msg: "Account verified" });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, msg: "Internal Server Error", err });
   }
 };
