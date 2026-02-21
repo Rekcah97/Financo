@@ -89,9 +89,6 @@ export const loginUser = async (req, res) => {
       expiresIn: "1d",
     });
 
-    console.log(accessToken);
-    console.log(refreshToken);
-
     await prisma.refreshToken.create({
       data: {
         token: refreshToken,
@@ -100,6 +97,63 @@ export const loginUser = async (req, res) => {
       },
     });
     return res.status(200).json({ success: true, accessToken, refreshToken });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, msg: "Internal Server Error", err });
+  }
+};
+
+//Route 3
+export const refreshAccessToken = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "refresh token not found" });
+    }
+
+    const storedToken = await prisma.refreshToken.findUnique({
+      where: {
+        token: refreshToken,
+      },
+    });
+
+    if (!storedToken || storedToken.expiresAt < Date.now()) {
+      return res.status(400).json({ success: false, msg: "Invalid Token" });
+    }
+
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const payload = {
+      id: decoded.id,
+    };
+
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: "1h",
+    });
+    const newRefreshToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: "1d",
+    });
+
+    await prisma.refreshToken.delete({
+      where: {
+        token: refreshToken,
+      },
+    });
+
+    await prisma.refreshToken.create({
+      data: {
+        token: newRefreshToken,
+        userId: payload.id,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+    });
+
+    return res
+      .status(201)
+      .json({ success: true, accessToken, refreshToken: newRefreshToken });
   } catch (err) {
     return res
       .status(500)
