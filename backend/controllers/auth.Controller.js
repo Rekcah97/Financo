@@ -122,6 +122,11 @@ export const refreshAccessToken = async (req, res) => {
     });
 
     if (!storedToken || storedToken.expiresAt < Date.now()) {
+      await prisma.refreshToken.delete({
+        where: {
+          token: refreshToken,
+        },
+      });
       return res.status(400).json({ success: false, msg: "Invalid Token" });
     }
 
