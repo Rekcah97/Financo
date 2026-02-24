@@ -201,3 +201,23 @@ export const editCategory = async (req, res) => {
     });
   }
 };
+
+//Route 4
+export const fetchAllCategory = async (req, res) => {
+  try {
+    const userId = Number(req.user.id);
+
+    const categories = await prisma.category.findMany({
+      where: {
+        userId,
+      },
+    });
+
+    return res.status(200).json({ success: true, categories });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};

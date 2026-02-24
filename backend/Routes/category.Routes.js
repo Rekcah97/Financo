@@ -4,6 +4,7 @@ import {
   createCategory,
   deleteCategory,
   editCategory,
+  fetchAllCategory,
 } from "../controllers/category.Controller.js";
 
 const router = Router();
@@ -16,5 +17,8 @@ router.delete("/delete/:catId", verifyJWT, deleteCategory);
 
 //Route 3
 router.patch("/edit/:catId", verifyJWT, editCategory);
+
+//Route 4
+router.get("/fetchAll", verifyJWT, fetchAllCategory);
 
 export default router;
