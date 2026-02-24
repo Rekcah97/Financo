@@ -21,6 +21,7 @@ model User {
   createdAt DateTime @default(now())
   RefreshToken RefreshToken[]
   VerificationCode VerificationCode[]
+  Category Category[]
 }
 model RefreshToken {
   id Int @id @default(autoincrement())
@@ -38,4 +39,18 @@ model VerificationCode {
   expiresAt DateTime 
   user User @relation(fields: [userId], references: [id])
   userId Int
+}
+enum Type{
+  saving
+  expense
+  income
+}
+
+model Category{
+  id Int @id @default(autoincrement())
+  name String
+  type Type
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  color String
 }

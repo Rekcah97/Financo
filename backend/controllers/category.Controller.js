@@ -1,0 +1,85 @@
+import { use } from "react";
+import prisma from "../config/db.config.js";
+
+const IS_VALID_TYPE = ["saving", "expense", "income"];
+
+//ERROR CHECKER 1
+const nameConflictChecker = async (name, userId) => {
+  return await prisma.category.findFirst({
+    where: {
+      userId,
+      name: {
+        equals: name,
+        mode: "insensitive",
+      },
+    },
+  });
+};
+
+//ERROR CHECKER 2
+const typeValidityChecker = async (type) => {
+  const isValid = IS_VALID_TYPE.includes(type);
+
+  return isValid;
+};
+
+//ERROR CHECKER 3
+const colorConflictChecker = async (color, userId) => {
+  return await prisma.category.findFirst({
+    where: {
+      color,
+      userId,
+    },
+  });
+};
+
+export const createCategory = async (req, res) => {
+  try {
+    const userId = Number(req.user.id);
+    const { name, type, color } = req.body;
+
+    const normaliseName = name.trim();
+    const normaliseType = type.toLowerCase().trim();
+
+    const nameConflict = await nameConflictChecker(normaliseName, userId);
+    if (nameConflict) {
+      return res
+        .status(400)
+        .json({ success: false, msg: "category with this name already exist" });
+    }
+
+    const validType = await typeValidityChecker(normaliseType);
+    if (!validType) {
+      return res.status(400).json({
+        success: false,
+        msg: "type can only be expense,saving or income",
+      });
+    }
+
+    const colorConflict = await colorConflictChecker(color, userId);
+    if (colorConflict) {
+      return res.status(400).json({
+        success: false,
+        msg: "category with this color already exist",
+      });
+    }
+
+    await prisma.category.create({
+      data: {
+        name: normaliseName,
+        type: normaliseType,
+        color,
+        userId,
+      },
+    });
+
+    return res
+      .status(201)
+      .json({ success: true, msg: "category created succesfully" });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};
