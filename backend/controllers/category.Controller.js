@@ -83,3 +83,40 @@ export const createCategory = async (req, res) => {
     });
   }
 };
+
+//Route 2
+export const deleteCategory = async (req, res) => {
+  try {
+    const catId = Number(req.params.catId);
+    const userId = Number(req.user.id);
+
+    const category = await prisma.category.findFirst({
+      where: {
+        id: catId,
+        userId,
+      },
+    });
+    if (!category) {
+      return res.status(400).json({
+        success: false,
+        msg: "category doesnot exist or already deleted",
+      });
+    }
+
+    await prisma.category.delete({
+      where: {
+        id: catId,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      msg: "category deleted succesfully",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};
