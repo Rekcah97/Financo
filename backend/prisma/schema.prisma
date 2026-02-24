@@ -22,6 +22,7 @@ model User {
   RefreshToken RefreshToken[]
   VerificationCode VerificationCode[]
   Category Category[]
+  Transaction Transaction[]
 }
 model RefreshToken {
   id Int @id @default(autoincrement())
@@ -53,4 +54,16 @@ model Category{
   user User @relation(fields: [userId], references: [id])
   userId Int
   color String
+  Transaction Transaction[]
+}
+model Transaction{
+  id Int @id @default(autoincrement())
+  amount Int
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  category Category @relation(fields: [catId],references: [id])
+  catId Int
+  note String
+  createdAt DateTime @default(now())
+  date DateTime
 }

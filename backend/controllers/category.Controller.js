@@ -1,4 +1,3 @@
-import { use } from "react";
 import prisma from "../config/db.config.js";
 
 const IS_VALID_TYPE = ["saving", "expense", "income"];
