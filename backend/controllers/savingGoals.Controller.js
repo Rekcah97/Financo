@@ -1,5 +1,6 @@
 import prisma from "../config/db.config.js";
 
+//Route 1
 export const createSavingGoal = async (req, res) => {
   try {
     const userId = Number(req.user.id);
@@ -54,6 +55,41 @@ export const createSavingGoal = async (req, res) => {
     });
 
     return res.status(201).json({ success: true, msg: "saving goal created" });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, msg: "Internal Server Error" });
+  }
+};
+
+//Route 2
+
+export const deleteSavingGoal = async (req, res) => {
+  try {
+    const userId = Number(req.user.id);
+    const sId = Number(req.params.sId);
+
+    const goals = await prisma.savingGoals.findFirst({
+      where: {
+        userId,
+        id: sId,
+      },
+    });
+
+    if (!goals) {
+      return res.status(404).json({
+        success: false,
+        msg: "saving Goals doesnot exist or has been deleted",
+      });
+    }
+
+    await prisma.savingGoals.delete({
+      where: {
+        id: sId,
+      },
+    });
+
+    return res.status(200).json({ success: true, msg: "saving goals deleted" });
   } catch (err) {
     return res
       .status(500)

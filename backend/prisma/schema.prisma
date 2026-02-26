@@ -76,5 +76,4 @@ model savingGoals{
   userId Int
   targetAmount Int
   deadline DateTime
-
 }
