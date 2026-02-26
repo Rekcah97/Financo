@@ -1,5 +1,6 @@
 import prisma from "../config/db.config.js";
 
+//Route 1
 export const createTransaction = async (req, res) => {
   try {
     const userId = Number(req.user.id);
@@ -41,5 +42,41 @@ export const createTransaction = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, msg: "Internal Server Error", err });
+  }
+};
+
+//Route 2
+export const deleteTransaction = async (req, res) => {
+  try {
+    const transactionId = Number(req.params.transactionId);
+    const userId = Number(req.user.id);
+
+    const transaction = await prisma.transaction.findFirst({
+      where: {
+        id: transactionId,
+        userId,
+      },
+    });
+
+    if (!transaction) {
+      return res.status(404).json({
+        success: false,
+        msg: "Transaction doesnt exist or has been deleted",
+      });
+    }
+
+    await prisma.transaction.delete({
+      where: {
+        id: transactionId,
+      },
+    });
+
+    return res
+      .status(200)
+      .json({ success: true, msg: "Transaction deleted successfully" });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, msg: "Internal Server Error" });
   }
 };
