@@ -80,3 +80,29 @@ export const deleteTransaction = async (req, res) => {
       .json({ success: false, msg: "Internal Server Error" });
   }
 };
+
+//Route 3
+export const fetchAllTransaction = async (req, res) => {
+  try {
+    const userId = Number(req.user.id);
+
+    const transaction = await prisma.transaction.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        id: "desc",
+      },
+    });
+
+    if (!transaction) {
+      return res.status(404).json({ success: false, msg: "Empty transaction" });
+    }
+
+    return res.status(200).json({ success: true, transaction });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, msg: "Internal Server Error" });
+  }
+};
