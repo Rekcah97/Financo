@@ -95,10 +95,6 @@ export const fetchAllTransaction = async (req, res) => {
       },
     });
 
-    if (!transaction) {
-      return res.status(404).json({ success: false, msg: "Empty transaction" });
-    }
-
     return res.status(200).json({ success: true, transaction });
   } catch (err) {
     return res

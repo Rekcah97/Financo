@@ -96,3 +96,26 @@ export const deleteSavingGoal = async (req, res) => {
       .json({ success: false, msg: "Internal Server Error" });
   }
 };
+
+//Route 3
+
+export const fetchGoals = async (req, res) => {
+  try {
+    const userId = Number(req.user.id);
+
+    const goals = await prisma.savingGoals.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        id: "desc",
+      },
+    });
+
+    return res.status(200).json({ success: true, goals });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, msg: "Internal Server Error" });
+  }
+};
