@@ -80,3 +80,23 @@ export const deleteAllocation = async (req, res) => {
       .json({ success: false, msg: "Internal Server Error" });
   }
 };
+
+//Route 3
+
+export const fetchAllocations = async (req, res) => {
+  try {
+    const userId = Number(req.user.id);
+
+    const allocations = await prisma.savingAllocation.findMany({
+      where: {
+        userId,
+      },
+    });
+
+    return res.status(200).json({ success: true, allocations });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, Msg: "Internal Server Error" });
+  }
+};
