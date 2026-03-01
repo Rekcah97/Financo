@@ -10,7 +10,7 @@ import {
 const router = Router();
 
 //Route 1
-router.post("/create", verifyJWT, createCategory);
+router.post("/create",verifyJWT, createCategory);
 
 //Route 2
 router.delete("/delete/:catId", verifyJWT, deleteCategory);

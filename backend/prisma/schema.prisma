@@ -23,7 +23,8 @@ model User {
   VerificationCode VerificationCode[]
   Category Category[]
   Transaction Transaction[]
-  savingGoals savingGoals[]
+  SavingGoals SavingGoals[]
+  SavingAllocation SavingAllocation[]
 }
 model RefreshToken {
   id Int @id @default(autoincrement())
@@ -69,11 +70,21 @@ model Transaction{
   date DateTime
 }
 
-model savingGoals{
+model SavingGoals{
   id Int @id @default(autoincrement())
   name String
   user User @relation(fields: [userId],references: [id])
   userId Int
   targetAmount Int
   deadline DateTime
+  SavingAllocation SavingAllocation[]
+}
+
+model SavingAllocation{
+id Int @id @default(autoincrement())
+amount Int
+user User @relation(fields: [userId],references: [id])
+userId Int
+savingGoal SavingGoals @relation(fields: [sId],references: [id])
+sId Int
 }

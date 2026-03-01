@@ -40,6 +40,7 @@ const colorConflictChecker = async (color, userId, id) => {
 
 export const createCategory = async (req, res) => {
   try {
+    
     const userId = Number(req.user.id);
     const { name, type, color } = req.body;
 
