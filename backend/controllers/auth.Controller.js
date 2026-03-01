@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sendVerificationOTP } from "../utils/sendVerificationOtp.js";
 
+const timeFor1Day = 24 * 60 * 60 * 1000;
+const oneDayfromNow = Date.now() + timeFor1Day;
 //Route 1
 export const createUser = async (req, res) => {
   const error = validationResult(req);
@@ -25,7 +27,8 @@ export const createUser = async (req, res) => {
         .json({ success: false, msg: "User already exist " });
     }
 
-    const secPassword = await bcrypt.hash(password, 10);
+    const saltAmount = 10;
+    const secPassword = await bcrypt.hash(password, saltAmount);
 
     const newUser = await prisma.user.create({
       data: {
@@ -105,7 +108,7 @@ export const loginUser = async (req, res) => {
       data: {
         token: refreshToken,
         userId: payload.id,
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        expiresAt: new Date(oneDayfromNow),
       },
     });
     return res.status(200).json({ success: true, accessToken, refreshToken });
@@ -164,7 +167,7 @@ export const refreshAccessToken = async (req, res) => {
       data: {
         token: newRefreshToken,
         userId: payload.id,
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        expiresAt: new Date(oneDayfromNow),
       },
     });
 

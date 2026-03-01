@@ -10,4 +10,5 @@ app.use(express.json());
 await startServer(app, port);
 
 await cleanupExpiredEntries();
-setInterval(cleanupExpiredEntries, 30 * 24 * 1000);
+const timeFor30Min = 30 * 60 * 1000;
+setInterval(cleanupExpiredEntries, timeFor30Min);

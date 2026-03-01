@@ -23,11 +23,13 @@ export const sendVerificationOTP = async (id, email) => {
 
     const hashedOtp = await bcrypt.hash(otp, 10);
 
+    const oneHrFromNow = Date.now() + 60 * 60 * 1000;
+
     await prisma.verificationCode.create({
       data: {
         code: hashedOtp,
         userId: id,
-        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        expiresAt: new Date(oneHrFromNow),
       },
     });
 
