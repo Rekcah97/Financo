@@ -40,3 +40,43 @@ export const allocateAmount = async (req, res) => {
       .json({ success: false, msg: "Internal Server Error" });
   }
 };
+
+//Route 2
+
+export const deleteAllocation = async (req, res) => {
+  try {
+    const userId = Number(req.user.id);
+    const aId = Number(req.params.aId);
+
+    const allocation = await prisma.savingAllocation.findFirst({
+      where: {
+        userId,
+        id: aId,
+      },
+    });
+    console.log(allocation);
+    if (!allocation) {
+      return res.status(404).json({
+        success: false,
+        msg: "Allocation doesnot exist or has been deleted",
+      });
+    }
+
+    await prisma.$transaction(async (transaction) => {
+      await transaction.savingAllocation.delete({
+        where: {
+          id: aId,
+        },
+      });
+    });
+
+    return res.status(200).json({
+      success: false,
+      msg: `${aId} allocation to ${allocation.sId} saving goal has been deleted`,
+    });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, msg: "Internal Server Error" });
+  }
+};
