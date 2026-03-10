@@ -24,18 +24,21 @@ export const allocateAmount = async (req, res) => {
         .status(400)
         .json({ success: false, msg: "amount must be greater than 0" });
     }
+
     await prisma.$transaction(async (transaction) => {
       const allocatedAmountForCurrentGoal =
         await transaction.savingAllocation.aggregate({
           _sum: { amount: true },
           where: {
-            sId: sId,
+            sId: Number(sId),
           },
         });
 
       const numericAllocatedAmount = Number(
         allocatedAmountForCurrentGoal._sum.amount ?? 0,
       );
+
+      console.log(numericAllocatedAmount);
 
       const requiredAmount = goal.targetAmount - numericAllocatedAmount;
       if (numericAmount > requiredAmount) {

@@ -89,6 +89,7 @@ export const deleteSavingGoal = async (req, res) => {
           sId: sId,
         },
       });
+
       await transcation.savingGoals.delete({
         where: {
           id: sId,
@@ -120,6 +121,50 @@ export const fetchGoals = async (req, res) => {
     });
 
     return res.status(200).json({ success: true, goals });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ success: false, msg: "Internal Server Error" });
+  }
+};
+
+//Route 4
+export const goalProgress = async (req, res) => {
+  try {
+    const userId = Number(req.user.id);
+
+    const goals = await prisma.savingGoals.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        id: "desc",
+      },
+    });
+
+    const goalsWithAllocations = await Promise.all(
+      goals.map(async (goal) => {
+        const allocations = await prisma.savingAllocation.findMany({
+          where: { sId: goal.id },
+        });
+        const totalAllocated = allocations.reduce(
+          (sum, allocation) => sum + allocation.amount,
+          0,
+        );
+
+        const percentage = ((totalAllocated / goal.targetAmount) * 100).toFixed(
+          2,
+        );
+        return {
+          ...goal,
+          allocations,
+          totalAllocated,
+          percentage,
+        };
+      }),
+    );
+
+    return res.status(200).json({ success: true, goalsWithAllocations });
   } catch (err) {
     return res
       .status(500)

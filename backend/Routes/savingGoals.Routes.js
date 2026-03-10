@@ -4,6 +4,7 @@ import {
   createSavingGoal,
   deleteSavingGoal,
   fetchGoals,
+  goalProgress,
 } from "../controllers/savingGoals.Controller.js";
 
 const router = Router();
@@ -16,5 +17,8 @@ router.delete("/delete/:sId", verifyJWT, deleteSavingGoal);
 
 //Route 3
 router.get("/fetchSavingGoals", verifyJWT, fetchGoals);
+
+//Route 4
+router.get("/progress", verifyJWT, goalProgress);
 
 export default router;
