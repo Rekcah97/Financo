@@ -5,6 +5,7 @@ import categoryRoute from "./category.Routes.js";
 import transactionRoute from "./transaction.Routes.js";
 import savingGoalsRoute from "./savingGoals.Routes.js";
 import savingAllocationRoute from "./savingAllocation.Routes.js";
+import summaryRoute from "./summary.Routes.js";
 
 const router = Router();
 
@@ -25,6 +26,9 @@ router.use("/savingGoals", savingGoalsRoute);
 
 //Route for Saving Allocation
 router.use("/savingAllocation", savingAllocationRoute);
+
+//Route for Summary
+router.use("/summary", summaryRoute);
 
 //Route for Health
 router.get("/health", (req, res) => {
