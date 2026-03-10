@@ -83,10 +83,17 @@ export const deleteSavingGoal = async (req, res) => {
       });
     }
 
-    await prisma.savingGoals.delete({
-      where: {
-        id: sId,
-      },
+    await prisma.$transaction(async (transcation) => {
+      await transcation.savingAllocation.deleteMany({
+        where: {
+          sId: sId,
+        },
+      });
+      await transcation.savingGoals.delete({
+        where: {
+          id: sId,
+        },
+      });
     });
 
     return res.status(200).json({ success: true, msg: "saving goals deleted" });
