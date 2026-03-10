@@ -5,6 +5,7 @@ export const allocateAmount = async (req, res) => {
   try {
     const userId = Number(req.user.id);
     const { amount, sId } = req.body;
+    const numericAmount = Number(amount);
 
     const goal = await prisma.savingGoals.findFirst({
       where: {
@@ -18,11 +19,19 @@ export const allocateAmount = async (req, res) => {
         .status(404)
         .json({ success: false, msg: "goal doesnot exist" });
     }
-
+    if (numericAmount <= 0) {
+      return res
+        .status(400)
+        .json({ success: false, msg: "amount must be greater than 0" });
+    }
     await prisma.$transaction(async (transaction) => {
-      const numericAmount = Number(amount);
+      const unallocatedAmount = Number(await unallocatedSavingMoney(userId));
 
-      const allocate = await transaction.savingAllocation.create({
+      if (numericAmount > unallocatedAmount) {
+        throw new Error("Not enough unallocated saving money");
+      }
+
+      await transaction.savingAllocation.create({
         data: {
           sId: Number(sId),
           userId,
@@ -36,9 +45,13 @@ export const allocateAmount = async (req, res) => {
       msg: `${amount} added to the goal with id ${sId}`,
     });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: "Internal Server Error" });
+    if (err.message === "Not enough unallocated saving money") {
+      return res.status(400).json({ success: false, msg: err.message });
+    } else {
+      return res
+        .status(500)
+        .json({ success: false, msg: "Internal Server Error" });
+    }
   }
 };
 
@@ -55,7 +68,7 @@ export const deleteAllocation = async (req, res) => {
         id: aId,
       },
     });
-    console.log(allocation);
+
     if (!allocation) {
       return res.status(404).json({
         success: false,
@@ -63,12 +76,10 @@ export const deleteAllocation = async (req, res) => {
       });
     }
 
-    await prisma.$transaction(async (transaction) => {
-      await transaction.savingAllocation.delete({
-        where: {
-          id: aId,
-        },
-      });
+    await prisma.savingAllocation.delete({
+      where: {
+        id: aId,
+      },
     });
 
     return res.status(200).json({
