@@ -25,6 +25,24 @@ export const allocateAmount = async (req, res) => {
         .json({ success: false, msg: "amount must be greater than 0" });
     }
     await prisma.$transaction(async (transaction) => {
+      const allocatedAmountForCurrentGoal =
+        await transaction.savingAllocation.aggregate({
+          _sum: { amount: true },
+          where: {
+            sId: sId,
+          },
+        });
+
+      const numericAllocatedAmount = Number(
+        allocatedAmountForCurrentGoal._sum.amount ?? 0,
+      );
+
+      const requiredAmount = goal.targetAmount - numericAllocatedAmount;
+      if (numericAmount > requiredAmount) {
+        throw new Error(
+          "amount cannot be greater than required amount for current goal",
+        );
+      }
       const unallocatedAmount = Number(await unallocatedSavingMoney(userId));
 
       if (numericAmount > unallocatedAmount) {
@@ -45,7 +63,11 @@ export const allocateAmount = async (req, res) => {
       msg: `${amount} added to the goal with id ${sId}`,
     });
   } catch (err) {
-    if (err.message === "Not enough unallocated saving money") {
+    if (
+      err.message === "Not enough unallocated saving money" ||
+      err.message ===
+        "amount cannot be greater than required amount for current goal"
+    ) {
       return res.status(400).json({ success: false, msg: err.message });
     } else {
       return res
