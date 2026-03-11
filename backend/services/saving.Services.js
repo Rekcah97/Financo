@@ -7,7 +7,7 @@ export const totalSavingMoney = async (userId) => {
       _sum: { amount: true },
       where: {
         userId,
-        category: { type: "saving" },
+        category: { is: { type: "saving" } },
       },
     });
 
@@ -42,7 +42,7 @@ export const unallocatedSavingMoney = async (userId) => {
     const allocatedAmount = await allocatedSavingMoney(userId);
     const unallocatedAmount = Math.max(0, totalAmount - allocatedAmount);
 
-    return unallocatedAmount ?? 0;
+    return unallocatedAmount;
   } catch (err) {
     console.error(err);
     throw err;

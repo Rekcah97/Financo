@@ -1,7 +1,7 @@
 import prisma from "../config/db.config.js";
 import {
-  allocatedSavingMoney,
   totalSavingMoney,
+  allocatedSavingMoney,
   unallocatedSavingMoney,
 } from "../services/saving.Services.js";
 
@@ -25,17 +25,11 @@ export const summaryDetails = async (req, res) => {
       },
     });
 
-    const saving = await prisma.transaction.aggregate({
-      _sum: { amount: true },
-      where: {
-        userId,
-        category: { is: { type: "saving" } },
-      },
-    });
+    const saving = await totalSavingMoney(userId);
 
     const incomeAmount = income._sum.amount ?? 0;
     const expenseAmount = expense._sum.amount ?? 0;
-    const savingAmount = saving._sum.amount ?? 0;
+    const savingAmount = saving;
 
     return res
       .status(200)
