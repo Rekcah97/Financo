@@ -43,6 +43,25 @@ export const createUser = async (req, res) => {
         verified: true,
       },
     });
+    const payload = {
+      id: newUser.id,
+    };
+
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: "1h",
+    });
+
+    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+      expiresIn: "1d",
+    });
+
+    await prisma.refreshToken.create({
+      data: {
+        token: refreshToken,
+        userId: payload.id,
+        expiresAt: new Date(oneDayfromNow),
+      },
+    });
 
     const inisiateVerification = await sendVerificationOTP(
       newUser.id,
@@ -55,7 +74,8 @@ export const createUser = async (req, res) => {
         msg: "Internal Server Error",
       });
     }
-    return res.status(201).json({ success: true, newUser });
+
+    return res.status(201).json({ success: true, accessToken, refreshToken });
   } catch (err) {
     return res
       .status(500)
