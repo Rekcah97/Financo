@@ -2,7 +2,7 @@ import prisma from "../config/db.config.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { sendVerificationOTP } from "../utils/sendVerificationOtp.js";
+import { sendVerificationOTP } from "../utils/sendVerificationOtp.utils.js";
 
 const timeFor1Day = 24 * 60 * 60 * 1000;
 const oneDayfromNow = Date.now() + timeFor1Day;
