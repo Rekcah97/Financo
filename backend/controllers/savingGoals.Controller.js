@@ -1,7 +1,8 @@
 import prisma from "../config/db.config.js";
+import AppError from "../utils/AppError.utils.js";
 
 //Route 1
-export const createSavingGoal = async (req, res) => {
+export const createSavingGoal = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
 
@@ -21,28 +22,23 @@ export const createSavingGoal = async (req, res) => {
     });
 
     if (nameConflict) {
-      return res.status(400).json({
-        success: true,
-        msg: "saving goal with this name already exist",
-      });
+      return next(
+        new AppError("saving goal with this name already exist", 409),
+      );
     }
 
-    if (numericAmount < 0 || numericAmount == 0) {
-      return res
-        .status(400)
-        .json({ success: false, msg: "Target Amount must be greater than 0" });
+    if (numericAmount <= 0 || isNaN(numericAmount)) {
+      return next(new AppError("Target Amount must be greater than 0", 400));
     }
 
     const targetDate = new Date(deadline);
-
-    const thirtyDatesFromNow = Date.now() + 30 * 24 * 60 * 60 * 1000;
+    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+    const thirtyDatesFromNow = Date.now() + THIRTY_DAYS_MS;
 
     const isValidDate = targetDate.getTime() >= thirtyDatesFromNow;
 
     if (!isValidDate) {
-      return res
-        .status(400)
-        .json({ success: false, msg: "Date must be atleast 30 days from now" });
+      return next(new AppError("Date must be atleast 30 days from now", 400));
     }
 
     await prisma.savingGoals.create({
@@ -56,15 +52,13 @@ export const createSavingGoal = async (req, res) => {
 
     return res.status(201).json({ success: true, msg: "saving goal created" });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: "Internal Server Error" });
+    next(err);
   }
 };
 
 //Route 2
 
-export const deleteSavingGoal = async (req, res) => {
+export const deleteSavingGoal = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
     const sId = Number(req.params.sId);
@@ -77,10 +71,9 @@ export const deleteSavingGoal = async (req, res) => {
     });
 
     if (!goals) {
-      return res.status(404).json({
-        success: false,
-        msg: "saving Goals doesnot exist or has been deleted",
-      });
+      return next(
+        new AppError("saving Goals doesnot exist or has been deleted", 404),
+      );
     }
 
     await prisma.$transaction(async (transcation) => {
@@ -99,15 +92,13 @@ export const deleteSavingGoal = async (req, res) => {
 
     return res.status(200).json({ success: true, msg: "saving goals deleted" });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: "Internal Server Error" });
+    next(err);
   }
 };
 
 //Route 3
 
-export const fetchGoals = async (req, res) => {
+export const fetchGoals = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
 
@@ -122,14 +113,12 @@ export const fetchGoals = async (req, res) => {
 
     return res.status(200).json({ success: true, goals });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: "Internal Server Error" });
+    next(err);
   }
 };
 
 //Route 4
-export const goalProgress = async (req, res) => {
+export const goalProgress = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
 
@@ -166,8 +155,6 @@ export const goalProgress = async (req, res) => {
 
     return res.status(200).json({ success: true, goalsWithAllocations });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: "Internal Server Error" });
+    next(err);
   }
 };
