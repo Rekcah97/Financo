@@ -1,13 +1,11 @@
 import jwt from "jsonwebtoken";
+import AppError from "../utils/AppError.utils";
 
 export const verifyJWT = async (req, res, next) => {
   try {
-  
     const authHeader = req.headers["authorization"];
     if (!authHeader) {
-      return res
-        .status(404)
-        .json({ success: false, msg: "invalid or empty token" });
+      return next(new AppError("invalid or empty token", 401));
     }
 
     const token = authHeader.split(" ")[1];
@@ -17,11 +15,11 @@ export const verifyJWT = async (req, res, next) => {
     next();
   } catch (err) {
     if (err.name === "TokenExpiredError") {
-      return res.status(500).json({ sucess: false, msg: "Token Expired" });
-    } else {
-      return res
-        .status(500)
-        .json({ sucess: false, msg: "Internal Server Error" });
+      return next(new AppError("Token Expired", 401));
     }
+    if (err.name === "JsonWebTokenError") {
+      return next(new AppError("Invalid token", 401));
+    }
+    next(err);
   }
 };

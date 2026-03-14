@@ -10,8 +10,8 @@ export const sendVerificationOTP = async (id, email) => {
 
     const saltRounds = 10;
     const hashedOtp = await bcrypt.hash(otp, saltRounds);
-
-    const oneHrFromNow = Date.now() + 60 * 60 * 1000;
+    const ONE_HOUR_MS = 60 * 60 * 1000;
+    const oneHrFromNow = Date.now() + ONE_HOUR_MS;
 
     await prisma.verificationCode.create({
       data: {
@@ -32,11 +32,10 @@ export const sendVerificationOTP = async (id, email) => {
       console.log("Resend error:", error);
       return { success: false };
     }
-    console.log("OTP email sent successfully", data);
 
     return { success: true };
   } catch (err) {
-    console.log("Error in sending verification code", err);
+    console.error("Error in sending verification code", err);
     return { success: false };
   }
 };
