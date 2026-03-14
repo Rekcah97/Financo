@@ -1,17 +1,16 @@
 import prisma from "../config/db.config.js";
+import AppError from "../utils/AppError.utils.js";
 
 //Route 1
-export const createTransaction = async (req, res) => {
+export const createTransaction = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
 
     const { amount, note, date, catId } = req.body;
 
     const numericAmount = Number(amount);
-    if (!numericAmount || numericAmount <= 0) {
-      return res
-        .status(400)
-        .json({ success: false, msg: "Amount cannot be less than 0 or empty" });
+    if (isNaN(numericAmount) || numericAmount <= 0) {
+      return next(new AppError("Amount cannot be less than 0 or empty", 400));
     }
 
     const category = await prisma.category.findFirst({
@@ -22,9 +21,7 @@ export const createTransaction = async (req, res) => {
     });
 
     if (!category) {
-      return res
-        .status(400)
-        .json({ success: false, msg: "category doesnot exist" });
+      return next(new AppError("category doesnot exist", 404));
     }
 
     await prisma.transaction.create({
@@ -39,14 +36,12 @@ export const createTransaction = async (req, res) => {
 
     return res.status(201).json({ success: true, msg: "transaction created" });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: "Internal Server Error", err });
+    next(err);
   }
 };
 
 //Route 2
-export const deleteTransaction = async (req, res) => {
+export const deleteTransaction = async (req, res, next) => {
   try {
     const transactionId = Number(req.params.transactionId);
     const userId = Number(req.user.id);
@@ -59,10 +54,9 @@ export const deleteTransaction = async (req, res) => {
     });
 
     if (!transaction) {
-      return res.status(404).json({
-        success: false,
-        msg: "Transaction doesnt exist or has been deleted",
-      });
+      return next(
+        new AppError("Transaction doesnt exist or has been deleted", 404),
+      );
     }
 
     await prisma.transaction.delete({
@@ -75,18 +69,16 @@ export const deleteTransaction = async (req, res) => {
       .status(200)
       .json({ success: true, msg: "Transaction deleted successfully" });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: "Internal Server Error" });
+    next(err);
   }
 };
 
 //Route 3
-export const fetchAllTransaction = async (req, res) => {
+export const fetchAllTransaction = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
 
-    const transaction = await prisma.transaction.findMany({
+    const transactions = await prisma.transaction.findMany({
       where: {
         userId,
       },
@@ -95,10 +87,8 @@ export const fetchAllTransaction = async (req, res) => {
       },
     });
 
-    return res.status(200).json({ success: true, transaction });
+    return res.status(200).json({ success: true, transactions });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: "Internal Server Error" });
+    next(err);
   }
 };
