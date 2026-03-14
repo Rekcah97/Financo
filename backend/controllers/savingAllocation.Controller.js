@@ -1,7 +1,8 @@
 import prisma from "../config/db.config.js";
 import { unallocatedSavingMoney } from "../services/saving.Services.js";
+import AppError from "../utils/AppError.utils.js";
 
-export const allocateAmount = async (req, res) => {
+export const allocateAmount = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
     const { amount, sId } = req.body;
@@ -15,14 +16,10 @@ export const allocateAmount = async (req, res) => {
     });
 
     if (!goal) {
-      return res
-        .status(404)
-        .json({ success: false, msg: "goal doesnot exist" });
+      return next(new AppError("goal doesnot exist", 404));
     }
-    if (numericAmount <= 0) {
-      return res
-        .status(400)
-        .json({ success: false, msg: "amount must be greater than 0" });
+    if (isNaN(numericAmount) || numericAmount <= 0) {
+      return next(new AppError("amount must be greater than 0", 400));
     }
 
     await prisma.$transaction(async (transaction) => {
@@ -38,18 +35,17 @@ export const allocateAmount = async (req, res) => {
         allocatedAmountForCurrentGoal._sum.amount ?? 0,
       );
 
-      console.log(numericAllocatedAmount);
-
       const requiredAmount = goal.targetAmount - numericAllocatedAmount;
       if (numericAmount > requiredAmount) {
-        throw new Error(
+        throw new AppError(
           "amount cannot be greater than required amount for current goal",
+          400,
         );
       }
       const unallocatedAmount = Number(await unallocatedSavingMoney(userId));
 
       if (numericAmount > unallocatedAmount) {
-        throw new Error("Not enough unallocated saving money");
+        throw new AppError("Not enough unallocated saving money", 400);
       }
 
       await transaction.savingAllocation.create({
@@ -66,23 +62,13 @@ export const allocateAmount = async (req, res) => {
       msg: `${amount} added to the goal with id ${sId}`,
     });
   } catch (err) {
-    if (
-      err.message === "Not enough unallocated saving money" ||
-      err.message ===
-        "amount cannot be greater than required amount for current goal"
-    ) {
-      return res.status(400).json({ success: false, msg: err.message });
-    } else {
-      return res
-        .status(500)
-        .json({ success: false, msg: "Internal Server Error" });
-    }
+    next(err);
   }
 };
 
 //Route 2
 
-export const deleteAllocation = async (req, res) => {
+export const deleteAllocation = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
     const aId = Number(req.params.aId);
@@ -95,10 +81,9 @@ export const deleteAllocation = async (req, res) => {
     });
 
     if (!allocation) {
-      return res.status(404).json({
-        success: false,
-        msg: "Allocation doesnot exist or has been deleted",
-      });
+      return next(
+        new AppError("Allocation doesnot exist or has been deleted", 404),
+      );
     }
 
     await prisma.savingAllocation.delete({
@@ -108,19 +93,17 @@ export const deleteAllocation = async (req, res) => {
     });
 
     return res.status(200).json({
-      success: false,
+      success: true,
       msg: `${aId} allocation to ${allocation.sId} saving goal has been deleted`,
     });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: "Internal Server Error" });
+    next(err);
   }
 };
 
 //Route 3
 
-export const fetchAllocations = async (req, res) => {
+export const fetchAllocations = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
 
@@ -132,8 +115,6 @@ export const fetchAllocations = async (req, res) => {
 
     return res.status(200).json({ success: true, allocations });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, Msg: "Internal Server Error" });
+    next(err);
   }
 };
