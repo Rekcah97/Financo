@@ -2,6 +2,8 @@ import express from "express";
 import { rateLimit } from "express-rate-limit";
 import Routes from "./Routes/index.js";
 import helmet from "helmet";
+import { notFound } from "./middleware/notFound.middleware.js";
+import { errorHandler } from "./middleware/errorHandler.middleware.js";
 
 const timeFor1Hr = 60 * 60 * 1000;
 const MAX_REQUEST_AUTH = 20;
@@ -32,5 +34,7 @@ app.use("/", generalLimiter);
 
 //routes
 app.use("/api", Routes);
+app.use(notFound);
+app.use(errorHandler);
 
 export default app;
