@@ -4,8 +4,9 @@ import {
   allocatedSavingMoney,
   unallocatedSavingMoney,
 } from "../services/saving.Services.js";
+import AppError from "../utils/AppError.utils.js";
 
-export const summaryDetails = async (req, res) => {
+export const summaryDetails = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
 
@@ -25,23 +26,19 @@ export const summaryDetails = async (req, res) => {
       },
     });
 
-    const saving = await totalSavingMoney(userId);
-
+    const savingAmount = await totalSavingMoney(userId);
     const incomeAmount = income._sum.amount ?? 0;
     const expenseAmount = expense._sum.amount ?? 0;
-    const savingAmount = saving;
 
     return res
       .status(200)
       .json({ success: true, incomeAmount, expenseAmount, savingAmount });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: "Internal Server Error" });
+    next(err);
   }
 };
 
-export const balanceDetails = async (req, res) => {
+export const balanceDetails = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
 
@@ -56,21 +53,17 @@ export const balanceDetails = async (req, res) => {
       unallocatedAmount,
     });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: "Internal Server Error" });
+    next(err);
   }
 };
 
-export const summaryDetailsbyDate = async (req, res) => {
+export const summaryDetailsbyDate = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
     const { start, end } = req.query;
 
     if (!start || !end) {
-      return res
-        .status(400)
-        .json({ success: false, msg: "Start and end are requireds" });
+      return next(new AppError("Start and end dates are requireds", 400));
     }
 
     const startDate = new Date(start);
@@ -112,8 +105,6 @@ export const summaryDetailsbyDate = async (req, res) => {
       .status(200)
       .json({ success: true, incomeAmount, expenseAmount, savingAmount });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: "Internal Server Error" });
+    next(err);
   }
 };
