@@ -1,7 +1,7 @@
 import prisma from "../config/db.config.js";
 
 //Route 1
-export const fetchUser = async (req, res) => {
+export const fetchUser = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
 
@@ -18,8 +18,6 @@ export const fetchUser = async (req, res) => {
 
     return res.status(200).json({ success: true, user });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, msg: "Internal Server Error" });
+    next(err);
   }
 };

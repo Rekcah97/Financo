@@ -1,4 +1,5 @@
 import prisma from "../config/db.config.js";
+import AppError from "../utils/AppError.utils.js";
 
 const IS_VALID_TYPE = ["saving", "expense", "income"];
 
@@ -19,7 +20,7 @@ const nameConflictChecker = async (name, userId, id) => {
 };
 
 //ERROR CHECKER 2
-const typeValidityChecker = async (type) => {
+const typeValidityChecker = (type) => {
   const isValid = IS_VALID_TYPE.includes(type);
 
   return isValid;
@@ -38,9 +39,8 @@ const colorConflictChecker = async (color, userId, id) => {
   });
 };
 
-export const createCategory = async (req, res) => {
+export const createCategory = async (req, res, next) => {
   try {
-    
     const userId = Number(req.user.id);
     const { name, type, color } = req.body;
 
@@ -49,25 +49,19 @@ export const createCategory = async (req, res) => {
 
     const nameConflict = await nameConflictChecker(normaliseName, userId);
     if (nameConflict) {
-      return res
-        .status(400)
-        .json({ success: false, msg: "category with this name already exist" });
+      return next(new AppError("category with this name already exist", 409));
     }
 
-    const validType = await typeValidityChecker(normaliseType);
+    const validType = typeValidityChecker(normaliseType);
     if (!validType) {
-      return res.status(400).json({
-        success: false,
-        msg: "type can only be expense,saving or income",
-      });
+      return next(
+        new AppError("type can only be expense,saving or income", 400),
+      );
     }
 
     const colorConflict = await colorConflictChecker(color, userId);
     if (colorConflict) {
-      return res.status(400).json({
-        success: false,
-        msg: "category with this color already exist",
-      });
+      return next(new AppError("category with this color already exist", 409));
     }
 
     await prisma.category.create({
@@ -83,15 +77,12 @@ export const createCategory = async (req, res) => {
       .status(201)
       .json({ success: true, msg: "category created succesfully" });
   } catch (err) {
-    return res.status(500).json({
-      success: false,
-      msg: "Internal Server Error",
-    });
+    next(err);
   }
 };
 
 //Route 2
-export const deleteCategory = async (req, res) => {
+export const deleteCategory = async (req, res, next) => {
   try {
     const catId = Number(req.params.catId);
     const userId = Number(req.user.id);
@@ -103,10 +94,9 @@ export const deleteCategory = async (req, res) => {
       },
     });
     if (!category) {
-      return res.status(400).json({
-        success: false,
-        msg: "category doesnot exist or already deleted",
-      });
+      return next(
+        new AppError("category doesnot exist or already deleted", 404),
+      );
     }
 
     await prisma.category.delete({
@@ -120,15 +110,12 @@ export const deleteCategory = async (req, res) => {
       msg: "category deleted succesfully",
     });
   } catch (err) {
-    return res.status(500).json({
-      success: false,
-      msg: "Internal Server Error",
-    });
+    next(err);
   }
 };
 
 //Route 3
-export const editCategory = async (req, res) => {
+export const editCategory = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
     const catId = Number(req.params.catId);
@@ -141,32 +128,30 @@ export const editCategory = async (req, res) => {
       },
     });
     if (!category) {
-      return res
-        .status(404)
-        .json({ success: false, msg: "catergory doesnot exist" });
+      return next(new AppError("category doesnot exist", 404));
     }
 
     const data = {};
     if (name !== undefined) {
       const normaliseName = name.trim();
-      const nameConflict = await nameConflictChecker(name, userId, catId);
+      const nameConflict = await nameConflictChecker(
+        normaliseName,
+        userId,
+        catId,
+      );
       if (nameConflict) {
-        return res.status(400).json({
-          success: false,
-          msg: "name is occupied by another cateegory",
-        });
+        return next(new AppError("name is occupied by another category", 409));
       }
       data.name = normaliseName;
     }
 
     if (type !== undefined) {
       const normaliseType = type.toLowerCase().trim();
-      const validType = await typeValidityChecker(type);
+      const validType = typeValidityChecker(normaliseType);
       if (!validType) {
-        return res.status(400).json({
-          success: false,
-          msg: "type can only be expense,saving or income",
-        });
+        return next(
+          new AppError("type can only be expense,saving or income", 400),
+        );
       }
 
       data.type = normaliseType;
@@ -175,10 +160,7 @@ export const editCategory = async (req, res) => {
     if (color !== undefined) {
       const colorConflict = await colorConflictChecker(color, userId, catId);
       if (colorConflict) {
-        return res.status(400).json({
-          success: false,
-          msg: "name is occupied by another cateegory",
-        });
+        return next(new AppError("color is occupied by another category", 409));
       }
 
       data.color = color;
@@ -195,15 +177,12 @@ export const editCategory = async (req, res) => {
       .status(200)
       .json({ success: true, msg: "Category edited successfully" });
   } catch (err) {
-    return res.status(500).json({
-      success: false,
-      msg: "Internal Server Error",
-    });
+    next(err);
   }
 };
 
 //Route 4
-export const fetchAllCategory = async (req, res) => {
+export const fetchAllCategory = async (req, res, next) => {
   try {
     const userId = Number(req.user.id);
 
@@ -215,9 +194,6 @@ export const fetchAllCategory = async (req, res) => {
 
     return res.status(200).json({ success: true, categories });
   } catch (err) {
-    return res.status(500).json({
-      success: false,
-      msg: "Internal Server Error",
-    });
+    next(err);
   }
 };
