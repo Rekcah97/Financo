@@ -1,0 +1,51 @@
+[33m9d39284[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Error handler implementation in verifyJWT anddd sendOtp
+[33m078bd6d[m Error handler implementation in savingallocation
+[33m048fd4e[m Error handler implementation in savingGoals
+[33m9e0675e[m Error handler implementation in summary
+[33m22b70b9[m Error handler implementation in transaction
+[33m9d7b9cb[m Error handler implementation in user and category
+[33m2b10484[m implementation of error handler in auth routes
+[33mf3d8b28[m custom error handler and Route not found handler
+[33m21667fe[m sendverificationOtp to sendVerificationOtp.utils
+[33m720deba[m ratelimiting in auth fixed and helmet
+[33mba70223[m rate limiters
+[33mdcae962[m redundancy fix
+[33m39803a9[m tokens in signup
+[33m91110e7[m summary route
+[33m548fe4f[m goal progress and saving allocation sid type bug fixed
+[33m7d613d9[m allocation logic with target amount
+[33me1900ea[m delete allocations with savingGoals
+[33m62d347c[m amount validation in allocating saving amount
+[33mfbe5d03[m business calculation
+[33m7a04fc9[m resend fix
+[33m83d9e51[m nodemailer to resend switch
+[33m567ed07[m remove date magic numbers
+[33m5a4a5bd[m fetch allocations
+[33me6b1af9[m delete allocation
+[33m277c4d1[m allocating money to goals
+[33m8c7c852[m fetch goals
+[33mf1acaf4[m delete saving goal
+[33me31afac[m create saving goal
+[33mcb843a3[m fetch transactions
+[33mf3e1684[m delete transaction
+[33m139c699[m create transaction route and schema
+[33mec06472[m fetch categories
+[33md94908c[m edit category Route
+[33ma749c9e[m delete Category Route
+[33m4c0ff20[m Create Category Route
+[33m24dd8ff[m cleanup expired OTP
+[33m9f35f0c[m resent verifyOTP route
+[33md7516e6[m verify email route
+[33me5ba47b[m moved cleanup to jobs folder
+[33mb02914c[m logout Route
+[33m7a5fb23[m remove if token is invalidd
+[33m56a292e[m cleaning up expired Token from database
+[33m5b5a5df[m refresh access token using refreshToken
+[33mc133897[m token verify & fetch user
+[33mfaa3162[m generate refresh Token
+[33m817b8fb[m sign in route
+[33m0583a57[m auth controller signup Route
+[33mebb1706[m prisma Client
+[33m7459aea[m prisma and user schema
+[33m6c373b0[m boiler plate express
+[33m7d1cc7d[m Initial commit

@@ -1,5 +1,3 @@
-import AppError from "../utils/AppError.utils.js";
-
 export const errorHandler = async (err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
@@ -7,7 +5,6 @@ export const errorHandler = async (err, req, res, next) => {
   if (err.errors) {
     return res.status(422).json({ success: false, errors: err.errors });
   }
-
   return res.status(statusCode).json({
     success: false,
     message,
