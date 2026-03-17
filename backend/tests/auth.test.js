@@ -1,13 +1,13 @@
 import test from "supertest";
 import { afterAll, beforeAll, describe, expect, jest } from "@jest/globals";
-const { jest: jestObj } = await import("@jest/globals");
-import app from "../app.js";
-import prisma from "../config/db.config.js";
 
-//Mock sendVerificationOTP
-jestObj.mock("../utils/sendVerificationOtp.utils.js", () => ({
+jest.unstable_mockModule("../utils/sendVerificationOtp.utils.js", () => ({
   sendVerificationOTP: jest.fn().mockResolvedValue({ success: true }),
 }));
+
+// App import must come AFTER the mock is set up
+const { default: app } = await import("../app.js");
+const { default: prisma } = await import("../config/db.config.js");
 
 let testUser = {
   name: "test User",
@@ -71,6 +71,14 @@ const refreshResponse = async (token) => {
   return result;
 };
 
+const siginResponse = async (email, password) => {
+  const result = await test(app).post("/api/auth/signin").send({
+    email: email,
+    password: password,
+  });
+
+  return result;
+};
 //Route for signup
 describe("POST /api/auth/signup", () => {
   beforeAll(deleteTestUserData);
@@ -160,6 +168,42 @@ describe("POST /api/auth/refresh", () => {
   it("Return 401 if token doesnot exit in database", async () => {
     const refreshToken = testUser.refreshToken;
     const response = await refreshResponse(refreshToken);
+
+    expect(response.status).toBe(401);
+    expect(response.body.success).toBe(false);
+  });
+});
+
+//Route for sigin
+describe("POST /api/auth/signin", () => {
+  //test 1
+  it("should login in the user and return 200", async () => {
+    const response = await siginResponse(testUser.email, testUser.password);
+
+    // testUser.refreshToken = response.body.refreshToken;
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    expect(response.body.accessToken).toBeDefined();
+  });
+
+  //test 2
+  it("Return 422 if the sent data is invalid", async () => {
+    const response = await siginResponse("test", testUser.password);
+
+    expect(response.status).toBe(422);
+    expect(response.body.success).toBe(false);
+  });
+
+  //test 3
+  it("Return 404 if the user doesnot exist", async () => {
+    const response = await siginResponse("test@gmail.com", testUser.password);
+
+    expect(response.status).toBe(404);
+    expect(response.body.success).toBe(false);
+  });
+
+  it("Return 401 if the password is incorrect", async () => {
+    const response = await siginResponse(testUser.email, "testPassword");
 
     expect(response.status).toBe(401);
     expect(response.body.success).toBe(false);
