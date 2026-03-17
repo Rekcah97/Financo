@@ -8,6 +8,7 @@ jest.unstable_mockModule("../utils/sendVerificationOtp.utils.js", () => ({
 // App import must come AFTER the mock is set up
 const { default: app } = await import("../app.js");
 const { default: prisma } = await import("../config/db.config.js");
+import bcrypt from "bcrypt";
 
 let testUser = {
   name: "test User",
@@ -79,6 +80,18 @@ const siginResponse = async (email, password) => {
 
   return result;
 };
+
+const verifyEmailResponse = async (otp, accessToken) => {
+  const result = await test(app)
+    .post("/api/auth/verifyEmail")
+    .set("Authorization", `Bearer ${accessToken}`)
+    .send({
+      otp: otp,
+    });
+
+  return result;
+};
+const ONE_HOUR_MS = 60 * 60 * 1000;
 //Route for signup
 describe("POST /api/auth/signup", () => {
   beforeAll(deleteTestUserData);
@@ -93,6 +106,7 @@ describe("POST /api/auth/signup", () => {
     );
 
     testUser.refreshToken = response.body.refreshToken;
+    testUser.accessToken = response.body.accessToken;
 
     expect(response.status).toBe(201);
     expect(response.body.success).toBe(true);
@@ -206,6 +220,63 @@ describe("POST /api/auth/signin", () => {
     const response = await siginResponse(testUser.email, "testPassword");
 
     expect(response.status).toBe(401);
+    expect(response.body.success).toBe(false);
+  });
+});
+
+describe("POST /api/auth/verifyEmail", () => {
+  const rawOtp = "1234";
+  const saltRounds = 10;
+
+  beforeAll(async () => {
+    const hashedOtp = await bcrypt.hash(rawOtp, saltRounds);
+    const oneHrFromNow = Date.now() + ONE_HOUR_MS;
+    const otpDetails = await prisma.verificationCode.create({
+      data: {
+        code: hashedOtp,
+        expiresAt: new Date(oneHrFromNow),
+        userId: testUser.id,
+      },
+    });
+    testUser.otpId = otpDetails.id;
+  });
+
+  //test1
+  it("Should verify the user", async () => {
+    const response = await verifyEmailResponse(rawOtp, testUser.accessToken);
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+  });
+
+  //test 2
+  it("Return 400 if the otp is empty", async () => {
+    const otp = "";
+    const response = await verifyEmailResponse(otp, testUser.accessToken);
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBe(false);
+  });
+
+  //test 3
+  it("Return 404 if the otp is not stored in database", async () => {
+    const wrongOtp = "2345";
+    const response = await verifyEmailResponse(wrongOtp, testUser.accessToken);
+    expect(response.status).toBe(404);
+    expect(response.body.success).toBe(false);
+  });
+
+  //test 4
+  it("Return 400 if the otp is expired", async () => {
+    const oneHrBeforeNow = Date.now() - ONE_HOUR_MS;
+    const hashedOtp = await bcrypt.hash(rawOtp, saltRounds);
+    await prisma.verificationCode.create({
+      data: {
+        code: hashedOtp,
+        userId: testUser.id,
+        expiresAt: new Date(oneHrBeforeNow),
+      },
+    });
+    const response = await verifyEmailResponse(rawOtp, testUser.accessToken);
+    expect(response.status).toBe(400);
     expect(response.body.success).toBe(false);
   });
 });
