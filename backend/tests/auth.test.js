@@ -108,6 +108,14 @@ const resentOtpResponse = async (email, accessToken) => {
     });
   return result;
 };
+
+const logoutResponse = async (refreshToken) => {
+  const result = await test(app).post("/api/auth/logout").send({
+    refreshToken: refreshToken,
+  });
+  return result;
+};
+
 const ONE_HOUR_MS = 60 * 60 * 1000;
 //Route for signup
 describe("POST /api/auth/signup", () => {
@@ -211,7 +219,7 @@ describe("POST /api/auth/signin", () => {
   it("should login in the user and return 200", async () => {
     const response = await siginResponse(testUser.email, testUser.password);
 
-    // testUser.refreshToken = response.body.refreshToken;
+    testUser.refreshToken = response.body.refreshToken;
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
     expect(response.body.accessToken).toBeDefined();
@@ -340,6 +348,22 @@ describe("POST /api/auth/verifyEmail", () => {
       },
     });
     const response = await verifyEmailResponse(rawOtp, testUser.accessToken);
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBe(false);
+  });
+});
+
+describe("POST /api/auth/logout", () => {
+  //test1
+  it("Should logout the use and give 200", async () => {
+    const response = await logoutResponse(testUser.refreshToken);
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+  });
+
+  //test 2
+  it("Return 400 if the refresh token", async () => {
+    const response = await logoutResponse("");
     expect(response.status).toBe(400);
     expect(response.body.success).toBe(false);
   });
