@@ -361,6 +361,7 @@ describe("POST /api/auth/verifyEmail", () => {
 });
 
 describe("POST /api/auth/logout", () => {
+  afterAll(deleteTestUserData);
   //test1
   it("Should logout the use and give 200", async () => {
     const response = await logoutResponse(testUser.refreshToken);
