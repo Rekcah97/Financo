@@ -314,13 +314,21 @@ describe("POST /api/auth/verifyEmail", () => {
   });
 
   //test 1
+  it("Return 400 if otp is incorrect", async () => {
+    const wrongOtp = "2345";
+    const response = await verifyEmailResponse(wrongOtp, testUser.accessToken);
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBe(false);
+  });
+
+  //test 2
   it("Should verify the user", async () => {
     const response = await verifyEmailResponse(rawOtp, testUser.accessToken);
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
   });
 
-  //test 2
+  //test 3
   it("Return 400 if the otp is empty", async () => {
     const otp = "";
     const response = await verifyEmailResponse(otp, testUser.accessToken);
@@ -328,15 +336,14 @@ describe("POST /api/auth/verifyEmail", () => {
     expect(response.body.success).toBe(false);
   });
 
-  //test 3
+  //test 4
   it("Return 404 if the otp is not stored in database", async () => {
-    const wrongOtp = "2345";
-    const response = await verifyEmailResponse(wrongOtp, testUser.accessToken);
+    const response = await verifyEmailResponse(rawOtp, testUser.accessToken);
     expect(response.status).toBe(404);
     expect(response.body.success).toBe(false);
   });
 
-  //test 4
+  //test 5
   it("Return 400 if the otp is expired", async () => {
     const oneHrBeforeNow = Date.now() - ONE_HOUR_MS;
     const hashedOtp = await bcrypt.hash(rawOtp, saltRounds);
