@@ -276,7 +276,23 @@ describe("POST /api/auth/verifyEmail", () => {
   const rawOtp = "1234";
   const saltRounds = 10;
 
+  beforeEach(async () => {
+    await prisma.user.update({
+      where: {
+        id: testUser.id,
+      },
+
+      data: {
+        verified: false,
+      },
+    });
+  });
   beforeAll(async () => {
+    await prisma.verificationCode.deleteMany({
+      where: {
+        userId: testUser.id,
+      },
+    });
     const hashedOtp = await bcrypt.hash(rawOtp, saltRounds);
     const oneHrFromNow = Date.now() + ONE_HOUR_MS;
     const otpDetails = await prisma.verificationCode.create({
