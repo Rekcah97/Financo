@@ -4,6 +4,7 @@ import Routes from "./Routes/index.js";
 import helmet from "helmet";
 import { notFound } from "./middleware/notFound.middleware.js";
 import { errorHandler } from "./middleware/errorHandler.middleware.js";
+import cors from "cors";
 
 const timeFor1Hr = 60 * 60 * 1000;
 const MAX_REQUEST_AUTH = 20;
@@ -28,6 +29,12 @@ const generalLimiter = rateLimit({
 
 //middleware
 app.use(express.json());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    Credential: true,
+  }),
+);
 app.use(helmet());
 app.use("/api/auth", authLimiter);
 app.use("/", generalLimiter);
