@@ -225,6 +225,14 @@ export const verifyEmail = async (req, res, next) => {
       return next(new AppError("otp cannot be empty", 400));
     }
 
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (user.verified) {
+      return next(new AppError("user already verified", 400));
+    }
     const otpDetails = await prisma.verificationCode.findFirst({
       where: {
         userId,
@@ -232,12 +240,7 @@ export const verifyEmail = async (req, res, next) => {
     });
 
     if (!otpDetails) {
-      return next(
-        new AppError(
-          "account record doesnt exist or account is already verified",
-          404,
-        ),
-      );
+      return next(new AppError("account record doesnt exist", 404));
     }
 
     const isExpired = otpDetails.expiresAt.getTime() <= Date.now();

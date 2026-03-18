@@ -1,5 +1,12 @@
 import test from "supertest";
-import { afterAll, beforeAll, describe, expect, jest } from "@jest/globals";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+} from "@jest/globals";
 
 jest.unstable_mockModule("../utils/sendVerificationOtp.utils.js", () => ({
   sendVerificationOTP: jest.fn().mockResolvedValue({ success: true }),
@@ -89,6 +96,16 @@ const verifyEmailResponse = async (otp, accessToken) => {
       otp: otp,
     });
 
+  return result;
+};
+
+const resentOtpResponse = async (email, accessToken) => {
+  const result = await test(app)
+    .post("/api/auth/resentOtp")
+    .set("Authorization", `Bearer ${accessToken}`)
+    .send({
+      email: email,
+    });
   return result;
 };
 const ONE_HOUR_MS = 60 * 60 * 1000;
@@ -224,6 +241,37 @@ describe("POST /api/auth/signin", () => {
   });
 });
 
+describe("POST /api/auth/resentOtp", () => {
+  //test 1
+  it("should resent Otp and return 200", async () => {
+    const response = await resentOtpResponse(
+      testUser.email,
+      testUser.accessToken,
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+  });
+
+  it("Return 400 if the user is already verified", async () => {
+    await prisma.user.update({
+      where: {
+        id: testUser.id,
+      },
+      data: {
+        verified: true,
+      },
+    });
+    const response = await resentOtpResponse(
+      testUser.email,
+      testUser.accessToken,
+    );
+
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBe(false);
+  });
+});
+
 describe("POST /api/auth/verifyEmail", () => {
   const rawOtp = "1234";
   const saltRounds = 10;
@@ -241,7 +289,7 @@ describe("POST /api/auth/verifyEmail", () => {
     testUser.otpId = otpDetails.id;
   });
 
-  //test1
+  //test 1
   it("Should verify the user", async () => {
     const response = await verifyEmailResponse(rawOtp, testUser.accessToken);
     expect(response.status).toBe(200);
