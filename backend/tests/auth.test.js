@@ -49,6 +49,7 @@ const deleteTestUserData = async () => {
       },
     });
   }
+  prisma.$disconnect();
 };
 
 const saveUser = async () => {
