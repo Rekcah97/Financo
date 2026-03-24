@@ -1,9 +1,9 @@
+import PrivateNavBar from "./components/NavBar/PrivateNavBar";
+import PublicNavBar from "./components/NavBar/PublicNavBar";
+
 function App() {
-  return (
-    <>
-      <h1 className="text-8xl  text-blue-700">Hello World!</h1>
-    </>
-  );
+  const log = true;
+  return <>{log ? <PrivateNavBar /> : <PublicNavBar />}</>;
 }
 
 export default App;

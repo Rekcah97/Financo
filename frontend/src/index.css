@@ -1,1 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
+
+:root {
+  --primary: #6366f1;
+  --bg-primary: #0f172a;
+  --element-bg: #1f2b49;
+  --element-bg-hover: #1f2b49;
+  --secondary-dark: #a855f7;
+  --tertiary-dark: #10b981;
+}
+.nav-link {
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-family: "Inter", sans-serif;
+}
+
+.nav-link:hover {
+  color: var(--primary);
+}
+
+.icon:hover {
+  color: var(--primary);
+}
