@@ -6,7 +6,7 @@
   --primary: #6366f1;
   --bg-primary: #0f172a;
   --element-bg: #1f2b49;
-  --element-bg-hover: #1f2b49;
+  --element-bg-hover: #3f5284;
   --secondary-dark: #a855f7;
   --tertiary-dark: #10b981;
 }
@@ -22,4 +22,19 @@
 
 .icon:hover {
   color: var(--primary);
+}
+.dash-link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  padding-left: 1rem;
+}
+.dash-link:hover {
+  background-color: var(--element-bg-hover);
+  border-top-right-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+  /* border-right: ; */
 }

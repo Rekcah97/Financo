@@ -1,9 +1,19 @@
 import PrivateNavBar from "./components/NavBar/PrivateNavBar";
 import PublicNavBar from "./components/NavBar/PublicNavBar";
+import SideBar from "./components/SideBar";
 
 function App() {
   const log = true;
-  return <>{log ? <PrivateNavBar /> : <PublicNavBar />}</>;
+  return (
+    <>
+      <div className="flex flex-col h-screen overflow-hidden">
+        {log ? <PrivateNavBar /> : <PublicNavBar />}
+        <div className="flex flex-1 overflow-hidden">
+          <SideBar />
+        </div>
+      </div>
+    </>
+  );
 }
 
 export default App;
