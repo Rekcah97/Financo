@@ -32,9 +32,15 @@
   cursor: pointer;
   padding-left: 1rem;
 }
-.dash-link:hover {
+/* .dash-link:hover {
   background-color: var(--element-bg-hover);
   border-top-right-radius: 2rem;
   border-bottom-right-radius: 2rem;
-  /* border-right: ; */
+  border-right:;
+} */
+.active {
+  background-color: var(--element-bg-hover);
+  border-top-right-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+  border-left: 3px solid #04d9ff;
 }

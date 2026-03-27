@@ -9,7 +9,7 @@ function App() {
       <div className="flex flex-col h-screen overflow-hidden">
         {log ? <PrivateNavBar /> : <PublicNavBar />}
         <div className="flex flex-1 overflow-hidden">
-          <SideBar />
+          <SideBar userName={"Arpit"} />
         </div>
       </div>
     </>
