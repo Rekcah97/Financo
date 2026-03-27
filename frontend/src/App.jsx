@@ -3,6 +3,7 @@ import PublicNavBar from "./components/NavBar/PublicNavBar";
 import SideBar from "./components/PageElement/SideBar";
 import Login from "./components/auth/Login";
 import Footer from "./components/PageElement/Footer";
+import Register from "./components/auth/Register";
 function App() {
   const log = false;
   return (
@@ -11,7 +12,7 @@ function App() {
         {log ? <PrivateNavBar /> : <PublicNavBar />}
         <div className="flex flex-1 overflow-hidden">
           {/* <SideBar userName={"Arpit"} /> */}
-          <Login />
+          <Register />
         </div>
         <Footer />
       </div>
