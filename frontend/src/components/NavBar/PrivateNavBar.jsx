@@ -5,7 +5,7 @@ import { BsPersonCircle } from "react-icons/bs";
 function PrivateNavBar() {
   return (
     <header>
-      <nav className="flex items-center justify-between w-full p-3 bg-[var(--bg-primary)] cursor-pointer">
+      <nav className="flex items-center justify-between w-full p-5 bg-[var(--bg-primary)] cursor-pointer">
         <h3 className="font-[Manrope] font-bold text-white text-lg">Financo</h3>
         <div className="flex items-center gap-5">
           <a href="#" className="icon hidden sm:flex">
