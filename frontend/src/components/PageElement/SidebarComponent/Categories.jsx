@@ -101,7 +101,7 @@ function Categories() {
     },
   ];
   return (
-    <div className="flex flex-col gap-7">
+    <div className="flex flex-col gap-7 ">
       <div className="flex items-end w-full justify-between">
         <div className="flex flex-col gap-2 ">
           <h2 className=" font-bold text-5xl">Categories</h2>
@@ -117,10 +117,11 @@ function Categories() {
           </button>
         </div>
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 ">
         <div>
           <h3 className="font-bold text-2xl">Active Categories</h3>
         </div>
+
         <div
           className="grid gap-5"
           style={{

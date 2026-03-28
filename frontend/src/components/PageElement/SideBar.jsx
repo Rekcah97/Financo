@@ -5,25 +5,32 @@ import { BiCategoryAlt } from "react-icons/bi";
 import { FaFlag } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { FaQuestionCircle } from "react-icons/fa";
+import { Link, useLocation } from "react-router-dom";
 
 function SideBar({ userName }) {
   const [activeLink, SetActiveLink] = useState("Dashboard");
+  const location = useLocation();
+
   const links = [
     {
       name: "Dashboard",
       icon: <FaChartBar />,
+      path: "/Dashboards",
     },
     {
       name: "Allocations",
       icon: <GrTransaction />,
+      path: "/Allocations",
     },
     {
       name: "Categories",
       icon: <BiCategoryAlt />,
+      path: "/categories",
     },
     {
       name: "Goals",
       icon: <FaFlag />,
+      path: "/Goals",
     },
   ];
   return (
@@ -34,14 +41,16 @@ function SideBar({ userName }) {
         </h2>
         <div className="flex flex-col justify-center">
           {links.map((link) => (
-            <a
-              key={link.name}
-              className={`dash-link ${activeLink === link.name ? "active" : ""}`}
-              onClick={() => SetActiveLink(link.name)}
-            >
-              {link.icon}
-              {link.name}
-            </a>
+            <Link to={`${link.path}`}>
+              <a
+                key={link.name}
+                className={`dash-link ${location.pathname === link.path ? "active" : ""}`}
+                onClick={() => SetActiveLink(link.name)}
+              >
+                {link.icon}
+                {link.name}
+              </a>
+            </Link>
           ))}
         </div>
       </div>

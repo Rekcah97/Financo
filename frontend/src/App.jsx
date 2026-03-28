@@ -16,7 +16,7 @@ function App() {
           <PrivateNavBar />
           <div className="flex flex-1 overflow-hidden">
             <SideBar userName={"Arpit"} />
-            <main className="p-7 w-full">
+            <main className="p-7 w-full overflow-y-auto">
               <Routes>
                 <Route path="/categories" element={<Categories />} />
                 <Route path="*" element={<Categories />} />
