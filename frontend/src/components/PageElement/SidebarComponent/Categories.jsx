@@ -124,7 +124,7 @@ function Categories() {
         <div
           className="grid gap-5"
           style={{
-            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
           }}
         >
           {Fcategories.map((cat) => (
