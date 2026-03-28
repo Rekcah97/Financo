@@ -5,6 +5,8 @@ import SideBar from "./components/PageElement/SideBar";
 import Login from "./components/auth/Login";
 import Footer from "./components/PageElement/Footer";
 import Register from "./components/auth/Register";
+import Categories from "./components/PageElement/SidebarComponent/Categories";
+
 function App() {
   const log = true;
   return (
@@ -14,6 +16,12 @@ function App() {
           <PrivateNavBar />
           <div className="flex flex-1 overflow-hidden">
             <SideBar userName={"Arpit"} />
+            <main className="p-7 w-full">
+              <Routes>
+                <Route path="/categories" element={<Categories />} />
+                <Route path="*" element={<Categories />} />
+              </Routes>
+            </main>
           </div>
         </div>
       ) : (

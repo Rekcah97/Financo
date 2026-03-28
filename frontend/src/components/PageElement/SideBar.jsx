@@ -27,7 +27,7 @@ function SideBar({ userName }) {
     },
   ];
   return (
-    <div className="flex flex-col h-full w-3xs bg-[var(--element-bg)] justify-between">
+    <div className="hidden sm:flex flex-col h-full w-3xs bg-[var(--element-bg)] justify-between">
       <div className="flex flex-col gap-5">
         <h2 className="font-[Manrope] font-bold  text-2xl pt-4 pl-4">
           {userName}
