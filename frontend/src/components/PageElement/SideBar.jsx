@@ -5,13 +5,24 @@ import { BiCategoryAlt } from "react-icons/bi";
 import { FaFlag } from "react-icons/fa";
 
 function SideBar({ userName }) {
-  const [activeLink, setActiveLink] = useState("Dashboard");
-
+  const [activeLink, SetActiveLink] = useState("Dashboard");
   const links = [
-    { name: "Dashboard", icon: <FaChartBar /> },
-    { name: "Allocations", icon: <GrTransaction /> },
-    { name: "Categories", icon: <BiCategoryAlt /> },
-    { name: "Goals", icon: <FaFlag /> },
+    {
+      name: "Dashboard",
+      icon: <FaChartBar />,
+    },
+    {
+      name: "Allocations",
+      icon: <GrTransaction />,
+    },
+    {
+      name: "Categories",
+      icon: <BiCategoryAlt />,
+    },
+    {
+      name: "Goals",
+      icon: <FaFlag />,
+    },
   ];
   return (
     <div className="flex flex-col h-screen w-3xs bg-[var(--element-bg)] gap-5 ">
@@ -22,9 +33,8 @@ function SideBar({ userName }) {
         {links.map((link) => (
           <a
             key={link.name}
-            href="#"
             className={`dash-link ${activeLink === link.name ? "active" : ""}`}
-            onClick={() => setActiveLink(link.name)}
+            onClick={() => SetActiveLink(link.name)}
           >
             {link.icon}
             {link.name}

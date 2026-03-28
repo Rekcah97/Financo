@@ -6,7 +6,7 @@ import Login from "./components/auth/Login";
 import Footer from "./components/PageElement/Footer";
 import Register from "./components/auth/Register";
 function App() {
-  const log = true;
+  const log = false;
   return (
     <BrowserRouter>
       {log ? (

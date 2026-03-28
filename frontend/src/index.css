@@ -11,9 +11,10 @@
   --secondary-dark: #a855f7;
   --tertiary-dark: #10b981;
   --neon-Blue: #04d9ff;
-  --box-bg: #0d162c; /* for now this is in button of login*/
+  --box-bg: #141c2f; /* for now this is in button of login*/
   --text-secondary: #8d94ad;
   --input-box: #192540;
+  --button: #242f4a;
 }
 body {
   color: white;
