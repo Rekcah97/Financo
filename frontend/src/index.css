@@ -9,7 +9,7 @@
   --element-bg: #1f2b49;
   --element-bg-hover: #293963;
   --secondary-dark: #a855f7;
-  --tertiary-dark: #10b981;
+  --tertiary-dark: #9bffce;
   --neon-Blue: #04d9ff;
   --box-bg: #141c2f; /* for now this is in button of login*/
   --text-secondary: #8d94ad;
@@ -18,6 +18,13 @@
 }
 body {
   color: white;
+  background: linear-gradient(
+    135deg,
+    #11182e 0%,
+    #060e20 20%,
+    #060e20 80%,
+    #13162f 100%
+  );
 }
 
 .nav-link {
@@ -52,7 +59,8 @@ body {
   background-color: var(--element-bg-hover);
   border-top-right-radius: 2rem;
   border-bottom-right-radius: 2rem;
-  border-left: 3px solid var(--neon-Blue);
+  border-left: 3px solid var(--tertiary-dark);
+  color: var(--tertiary-dark);
 }
 
 .input-box {

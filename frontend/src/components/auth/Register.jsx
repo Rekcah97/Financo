@@ -14,7 +14,7 @@ function Register() {
   };
   return (
     <form>
-      <div className="flex flex-col items-center justify-center w-screen h-full bg-[linear-gradient(135deg,_#11182e_0%,_#060e20_20%,_#060e20_80%,_#13162f_100%)] gap-8">
+      <div className="flex flex-col items-center justify-center w-screen h-full gap-8">
         <div className="flex flex-col text-center gap-1">
           <h2 className="font-[Manrope] font-bold text-white text-4xl">
             Create your Account

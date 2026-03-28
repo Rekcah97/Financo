@@ -6,15 +6,14 @@ import Login from "./components/auth/Login";
 import Footer from "./components/PageElement/Footer";
 import Register from "./components/auth/Register";
 function App() {
-  const log = false;
+  const log = true;
   return (
     <BrowserRouter>
       {log ? (
         <div className="flex flex-col h-screen overflow-hidden">
           <PrivateNavBar />
           <div className="flex flex-1 overflow-hidden">
-            <SideBar />
-            <Routes></Routes>
+            <SideBar userName={"Arpit"} />
           </div>
         </div>
       ) : (
