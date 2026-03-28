@@ -121,7 +121,12 @@ function Categories() {
         <div>
           <h3 className="font-bold text-2xl">Active Categories</h3>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-5">
+        <div
+          className="grid gap-5"
+          style={{
+            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+          }}
+        >
           {Fcategories.map((cat) => (
             <CategoryCard
               key={cat.name}
