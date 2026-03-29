@@ -6,6 +6,7 @@ import Login from "./components/auth/Login";
 import Footer from "./components/PageElement/Footer";
 import Register from "./components/auth/Register";
 import Categories from "./components/PageElement/SidebarComponent/Categories";
+import Goals from "./components/PageElement/SidebarComponent/Goals";
 
 function App() {
   const log = true;
@@ -18,7 +19,8 @@ function App() {
             <SideBar userName={"Arpit"} />
             <main className="p-7 w-full overflow-y-auto">
               <Routes>
-                <Route path="/categories" element={<Categories />} />
+                <Route path="/Categories" element={<Categories />} />
+
                 <Route path="*" element={<Categories />} />
               </Routes>
             </main>
