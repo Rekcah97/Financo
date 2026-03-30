@@ -11,7 +11,6 @@ function Goals() {
       target: "50,000",
       date: "31 Dec, 2025",
       color: "#10b981",
-      priority: true,
     },
     {
       id: 2,
@@ -21,6 +20,7 @@ function Goals() {
       target: "80,000",
       date: "15 Mar, 2026",
       color: "#6366f1",
+      priority: true,
     },
     {
       id: 3,
@@ -50,6 +50,9 @@ function Goals() {
       color: "#3b82f6",
     },
   ];
+  const sortedGoals = [...goals].sort(
+    (a, b) => (b.priority ? 1 : 0) - (a.priority ? 1 : 0),
+  );
   return (
     <div className="flex flex-col gap-7 ">
       <div className="flex items-end w-full justify-between">
@@ -78,7 +81,7 @@ function Goals() {
             gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
           }}
         >
-          {goals.map((goal) => (
+          {sortedGoals.map((goal) => (
             <GoalsCard
               key={goal.id}
               name={goal.name}

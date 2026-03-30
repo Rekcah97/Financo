@@ -65,13 +65,11 @@ body {
 
 .input-box {
   padding: 1rem;
-  background-color: var(--input-box);
+
   border-radius: 0.5rem;
   outline: none;
 }
-.input-box:focus {
-  background-color: var(--element-bg-hover);
-}
+
 .check-box {
   border: none;
   background-color: var(--input-box);

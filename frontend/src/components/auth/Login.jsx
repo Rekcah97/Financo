@@ -31,7 +31,7 @@ function Login() {
                 value={credential.email}
                 required
                 onChange={onChange}
-                className="input-box"
+                className="input-box bg-[var(--input-box)] focus:bg-[var(--element-bg-hover)]"
               />
               <label htmlFor="password">
                 <b className="text-[var(--text-secondary)]">PASSWORD</b>
@@ -44,7 +44,7 @@ function Login() {
                 value={credential.password}
                 onChange={onChange}
                 required
-                className="input-box"
+                className="input-box bg-[var(--input-box)] focus:bg-[var(--element-bg-hover)]"
               />
               <div className="flex gap-2 items-center ">
                 <input
