@@ -20,7 +20,7 @@ function App() {
             <main className="p-7 w-full overflow-y-auto">
               <Routes>
                 <Route path="/Categories" element={<Categories />} />
-
+                <Route path="/Goals" element={<Goals />} />
                 <Route path="*" element={<Categories />} />
               </Routes>
             </main>
