@@ -20,7 +20,11 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
         <EditGoalModal allocated={allocated} onClose={() => setIsOpen(false)} />
       )}
       {deleteItem && (
-        <DeleteModal title="Goal" onClose={() => setDeleteItem(false)} />
+        <DeleteModal
+          title="Goal"
+          name={name}
+          onClose={() => setDeleteItem(false)}
+        />
       )}
       {priority === true ? (
         <div className="col-span-1 sm:col-span-2 flex flex-col justify-between bg-[var(--button)] rounded-2xl p-5 gap-3 h-55">
