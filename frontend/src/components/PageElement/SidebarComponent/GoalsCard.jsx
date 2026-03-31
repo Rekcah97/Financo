@@ -18,7 +18,7 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
         <EditGoalModal allocated={allocated} onClose={() => setIsOpen(false)} />
       )}
       {priority === true ? (
-        <div className="col-span-2 flex flex-col justify-between bg-[var(--button)] rounded-2xl p-5 gap-3 h-55">
+        <div className="col-span-1 sm:col-span-2 flex flex-col justify-between bg-[var(--button)] rounded-2xl p-5 gap-3 h-55">
           <div className="flex justify-between">
             <div>
               <div className="flex flex-col gap-3">
@@ -37,7 +37,7 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
                     Pirority
                   </p>
                 </div>
-                <div className="flex items-center ">
+                <div className="flex items-center justify-between ">
                   <p className="flex flex-col items-center text-sm">
                     Allocated Money
                     <b className="flex items-center text-3xl">
@@ -48,7 +48,7 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
               </div>
             </div>
             <div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 {" "}
                 <div>
                   <p className="text-[var(--text-secondary)]">
@@ -69,6 +69,14 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
                   <button className="cursor-pointer hover:text-red-400 p-2">
                     <FaTrash />
                   </button>
+                </div>
+                <div className="flex items-center justify-between ">
+                  <p className="flex flex-col items-center text-sm text-[var(--text-secondary)]">
+                    Target Amount
+                    <b className="flex items-center text-xl">
+                      <MdCurrencyRupee /> {target}
+                    </b>
+                  </p>
                 </div>
               </div>
             </div>
