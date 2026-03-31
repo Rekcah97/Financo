@@ -4,9 +4,11 @@ import { FaTrash } from "react-icons/fa";
 import { LuPencil } from "react-icons/lu";
 import { MdOutlineDateRange } from "react-icons/md";
 import EditGoalModal from "./EditGoalModal";
+import DeleteModal from "./DeleteModal";
 
 function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [deleteItem, setDeleteItem] = useState(false);
   const percentage =
     (parseFloat(allocated.replace(/,/g, "")) /
       parseFloat(target.replace(/,/g, ""))) *
@@ -16,6 +18,9 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
     <>
       {isOpen && (
         <EditGoalModal allocated={allocated} onClose={() => setIsOpen(false)} />
+      )}
+      {deleteItem && (
+        <DeleteModal title="Goal" onClose={() => setDeleteItem(false)} />
       )}
       {priority === true ? (
         <div className="col-span-1 sm:col-span-2 flex flex-col justify-between bg-[var(--button)] rounded-2xl p-5 gap-3 h-55">
@@ -66,7 +71,12 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
                     <LuPencil />
                   </button>
 
-                  <button className="cursor-pointer hover:text-red-400 p-2">
+                  <button
+                    className="cursor-pointer hover:text-red-400 p-2"
+                    onClick={() => {
+                      setDeleteItem(true);
+                    }}
+                  >
                     <FaTrash />
                   </button>
                 </div>
@@ -111,7 +121,12 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
                   <LuPencil />
                 </button>
 
-                <button className="cursor-pointer hover:text-red-400">
+                <button
+                  className="cursor-pointer hover:text-red-400"
+                  onClick={() => {
+                    setDeleteItem(true);
+                  }}
+                >
                   <FaTrash />
                 </button>
               </div>
