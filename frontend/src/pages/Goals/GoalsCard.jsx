@@ -3,8 +3,8 @@ import { MdCurrencyRupee } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
 import { LuPencil } from "react-icons/lu";
 import { MdOutlineDateRange } from "react-icons/md";
-import EditGoalModal from "./EditGoalModal";
 import DeleteModal from "../../components/ui/DeleteModal";
+import GoalModal from "./GoalModal";
 
 function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,7 +17,11 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
   return (
     <>
       {isOpen && (
-        <EditGoalModal allocated={allocated} onClose={() => setIsOpen(false)} />
+        <GoalModal
+          mode="edit"
+          goalData={{ name, desc, allocated, priority }}
+          onClose={() => setIsOpen(false)}
+        />
       )}
       {deleteItem && (
         <DeleteModal

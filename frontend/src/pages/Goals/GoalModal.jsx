@@ -1,18 +1,26 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { IoIosInformationCircle } from "react-icons/io";
 
-function EditGoalModal({ allocated, onClose }) {
-  const [form, SetForm] = useState({ name: "", desc: "", allocate: "" });
+function GoalModal({ mode = "create", goalData = null, onClose }) {
+  const isEdit = mode === "edit";
+  const [form, SetForm] = useState({
+    name: isEdit ? goalData.name : "",
+    desc: isEdit ? goalData.desc : "",
+    allocate: "",
+    allocated: isEdit ? goalData.allocated : "",
+    priority: isEdit ? goalData.priority : false,
+  });
   const onChange = (e) => {
     SetForm({ ...form, [e.target.name]: e.target.value });
   };
-  const money = 200;
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 ">
       <form action="">
         <div className="bg-[#111a2c] rounded-2xl p-8 w-2xl max-w-md flex flex-col gap-8 shadow-2xl ">
           <div className="flex flex-col gap-4">
-            <h2 className="font-bold text-xl">Edit Goal</h2>
+            <h2 className="font-bold text-xl">
+              {isEdit ? "Edit Goal" : "Create Goal"}
+            </h2>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">
                 <label
@@ -64,10 +72,12 @@ function EditGoalModal({ allocated, onClose }) {
                   onChange={onChange}
                   className="input-box bg-[#1f2a42] "
                 />
-                <p className="flex items-center gap-1 text-[var(--tertiary-dark)]">
-                  <IoIosInformationCircle />
-                  Currently Alloacted: ${allocated}
-                </p>
+                {isEdit && (
+                  <p className="flex items-center gap-1 text-[var(--tertiary-dark)]">
+                    <IoIosInformationCircle />
+                    Currently Alloacted: ${form.allocated}
+                  </p>
+                )}
               </div>
 
               <div className="flex justify-between p-4 bg-[#1f2a42] rounded-lg">
@@ -76,9 +86,9 @@ function EditGoalModal({ allocated, onClose }) {
                   <input type="checkbox" className="opacity-0 w-0 h-0 peer" />
                   <span
                     className="absolute cursor-pointer inset-0 bg-gray-400 rounded-full transition-all duration-400 peer-checked:bg-[var(--primary)]
-      before:content-[''] before:absolute before:h-6 before:w-6 before:left-0.5 before:bottom-0.5 
-      before:bg-white before:rounded-full before:transition-all before:duration-400
-      peer-checked:before:translate-x-7"
+         before:content-[''] before:absolute before:h-6 before:w-6 before:left-0.5 before:bottom-0.5 
+         before:bg-white before:rounded-full before:transition-all before:duration-400
+         peer-checked:before:translate-x-7"
                   />
                 </label>
               </div>
@@ -101,4 +111,4 @@ function EditGoalModal({ allocated, onClose }) {
   );
 }
 
-export default EditGoalModal;
+export default GoalModal;
