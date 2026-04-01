@@ -5,8 +5,8 @@ import SideBar from "./components/layout/SideBar";
 import Login from "./components/auth/Login";
 import Footer from "./components/layout/Footer";
 import Register from "./components/auth/Register";
-import Categories from "./components/pages/Categories/Categories";
-import Goals from "./components/pages/Goals/Goals";
+import Categories from "./pages/Categories/Categories";
+import Goals from "./pages/Goals/Goals";
 
 function App() {
   const log = true;

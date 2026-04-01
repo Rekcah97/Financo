@@ -4,7 +4,7 @@ import { FaTrash } from "react-icons/fa";
 import { LuPencil } from "react-icons/lu";
 import { MdOutlineDateRange } from "react-icons/md";
 import EditGoalModal from "./EditGoalModal";
-import DeleteModal from "../../ui/DeleteModal";
+import DeleteModal from "../../components/ui/DeleteModal";
 
 function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
   const [isOpen, setIsOpen] = useState(false);
