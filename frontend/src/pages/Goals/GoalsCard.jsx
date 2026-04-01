@@ -6,12 +6,12 @@ import { MdOutlineDateRange } from "react-icons/md";
 import DeleteModal from "../../components/ui/DeleteModal";
 import GoalModal from "./GoalModal";
 
-function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
+function GoalsCard({ goal }) {
   const [isOpen, setIsOpen] = useState(false);
   const [deleteItem, setDeleteItem] = useState(false);
   const percentage =
-    (parseFloat(allocated.replace(/,/g, "")) /
-      parseFloat(target.replace(/,/g, ""))) *
+    (parseFloat(goal.allocated.replace(/,/g, "")) /
+      parseFloat(goal.target.replace(/,/g, ""))) *
     100;
 
   return (
@@ -19,18 +19,23 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
       {isOpen && (
         <GoalModal
           mode="edit"
-          goalData={{ name, desc, allocated, priority }}
+          goalData={{
+            name: goal.name,
+            desc: goal.desc,
+            allocated: goal.allocated,
+            priority: goal.priority,
+          }}
           onClose={() => setIsOpen(false)}
         />
       )}
       {deleteItem && (
         <DeleteModal
           title="Goal"
-          name={name}
+          name={goal.name}
           onClose={() => setDeleteItem(false)}
         />
       )}
-      {priority === true ? (
+      {goal.priority === true ? (
         <div className="col-span-1 sm:col-span-2 flex flex-col justify-between bg-[var(--button)] rounded-2xl p-5 gap-3 h-55">
           <div className="flex justify-between">
             <div>
@@ -38,10 +43,10 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
                 <div className="flex justify-between items-start">
                   <div className="flex flex-col gap-1 min-w-0 flex-1">
                     <h2 className="font-bold text-xl leading-tight line-clamp-1">
-                      {name}
+                      {goal.name}
                     </h2>
                     <p className="text-[var(--text-secondary)] text-sm line-clamp-1">
-                      {desc}
+                      {goal.desc}
                     </p>
                   </div>
                 </div>
@@ -54,7 +59,7 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
                   <p className="flex flex-col items-center text-sm">
                     Allocated Money
                     <b className="flex items-center text-3xl">
-                      <MdCurrencyRupee /> {allocated}
+                      <MdCurrencyRupee /> {goal.allocated}
                     </b>
                   </p>
                 </div>
@@ -67,7 +72,7 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
                   <p className="text-[var(--text-secondary)]">
                     Target Deadline
                   </p>
-                  <p className="flex justify-center">{date}</p>
+                  <p className="flex justify-center">{goal.date}</p>
                 </div>
                 <div className="flex items-center gap-3 text-lg shrink-0 ml-3">
                   <button
@@ -92,7 +97,7 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
                   <p className="flex flex-col items-center text-sm text-[var(--text-secondary)]">
                     Target Amount
                     <b className="flex items-center text-xl">
-                      <MdCurrencyRupee /> {target}
+                      <MdCurrencyRupee /> {goal.target}
                     </b>
                   </p>
                 </div>
@@ -103,7 +108,7 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
           <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
             <div
               className="h-full rounded-full transition-all"
-              style={{ width: `${percentage}%`, backgroundColor: color }}
+              style={{ width: `${percentage}%`, backgroundColor: goal.color }}
             />
           </div>
         </div>
@@ -113,10 +118,10 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
             <div className="flex justify-between items-start">
               <div className="flex flex-col gap-1 min-w-0 flex-1">
                 <h2 className="font-bold text-xl leading-tight line-clamp-1">
-                  {name}
+                  {goal.name}
                 </h2>
                 <p className="text-[var(--text-secondary)] text-sm line-clamp-1">
-                  {desc}
+                  {goal.desc}
                 </p>
               </div>
               <div className="flex items-center gap-3 text-lg shrink-0 ml-3">
@@ -143,12 +148,12 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
             <div className="flex items-center justify-between">
               <p className="flex items-center text-sm">
                 <b className="flex items-center text-sm">
-                  <MdCurrencyRupee /> {allocated}
+                  <MdCurrencyRupee /> {goal.allocated}
                 </b>{" "}
                 /{" "}
                 <span className="flex items-center text-sm text-[var(--text-secondary)]">
                   {" "}
-                  <MdCurrencyRupee /> {target}
+                  <MdCurrencyRupee /> {goal.target}
                 </span>
               </p>
             </div>
@@ -157,14 +162,14 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
           <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
             <div
               className="h-full rounded-full transition-all"
-              style={{ width: `${percentage}%`, backgroundColor: color }}
+              style={{ width: `${percentage}%`, backgroundColor: goal.color }}
             />
           </div>
           <div>
             <div className="flex items-center gap-2 text-[var(--text-secondary)]">
               <MdOutlineDateRange />
               <p>Due</p>
-              {date}
+              {goal.date}
             </div>
           </div>
         </div>

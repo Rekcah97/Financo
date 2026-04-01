@@ -45,16 +45,7 @@ function Goals() {
             }}
           >
             {sortedGoals.map((goal) => (
-              <GoalsCard
-                key={goal.id}
-                name={goal.name}
-                desc={goal.desc}
-                allocated={goal.allocated}
-                target={goal.target}
-                date={goal.date}
-                color={goal.color}
-                priority={goal.priority}
-              />
+              <GoalsCard key={goal.id} goal={goal} />
             ))}
           </div>
         </div>
