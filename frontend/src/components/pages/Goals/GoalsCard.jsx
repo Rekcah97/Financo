@@ -43,7 +43,7 @@ function GoalsCard({ name, desc, allocated, target, date, color, priority }) {
                 </div>
                 <div>
                   <p className="bg-[#1f2a42] inline-block px-2 py-1 rounded text-sm font-bold text-[var(--neon-Blue)]">
-                    Pirority
+                    Priority
                   </p>
                 </div>
                 <div className="flex items-center justify-between ">
