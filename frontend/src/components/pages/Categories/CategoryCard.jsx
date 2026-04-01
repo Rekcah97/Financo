@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { MdCurrencyRupee } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
 import { LuPencil } from "react-icons/lu";
-import DeleteModal from "./DeleteModal";
+import DeleteModal from "../../ui/DeleteModal";
 
 function CategoryCard({ name, desc, type, spent, lastMonth, color }) {
   const [deleteItem, setDeleteItem] = useState(false);

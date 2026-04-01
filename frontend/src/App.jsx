@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import PrivateNavBar from "./components/NavBar/PrivateNavBar";
 import PublicNavBar from "./components/NavBar/PublicNavBar";
-import SideBar from "./components/PageElement/SideBar";
+import SideBar from "./components/layout/SideBar";
 import Login from "./components/auth/Login";
-import Footer from "./components/PageElement/Footer";
+import Footer from "./components/layout/Footer";
 import Register from "./components/auth/Register";
-import Categories from "./components/PageElement/SidebarComponent/Categories";
-import Goals from "./components/PageElement/SidebarComponent/Goals";
+import Categories from "./components/pages/Categories/Categories";
+import Goals from "./components/pages/Goals/Goals";
 
 function App() {
   const log = true;
