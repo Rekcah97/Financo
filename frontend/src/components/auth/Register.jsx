@@ -10,7 +10,7 @@ function Register() {
     confirmPassword: "",
   });
   const onChange = (e) => {
-    setCredential({ ...credential, [e.target.name]: [e.target.value] });
+    setCredential({ ...credential, [e.target.name]: e.target.value });
   };
   return (
     <form>

@@ -4,7 +4,7 @@ import { IoIosInformationCircle } from "react-icons/io";
 function EditGoalModal({ allocated, onClose }) {
   const [form, SetForm] = useState({ name: "", desc: "", allocate: "" });
   const onChange = (e) => {
-    SetForm({ ...form, [e.target.name]: [e.target.value] });
+    SetForm({ ...form, [e.target.name]: e.target.value });
   };
   const money = 200;
   return (

@@ -4,7 +4,7 @@ import { FaGithub } from "react-icons/fa6";
 function Login() {
   const [credential, setCredential] = useState({ email: "", password: "" });
   const onChange = (e) => {
-    setCredential({ ...credential, [e.target.name]: [e.target.value] });
+    setCredential({ ...credential, [e.target.name]: e.target.value });
   };
   return (
     <>
