@@ -4,16 +4,16 @@ import { FaTrash } from "react-icons/fa";
 import { LuPencil } from "react-icons/lu";
 import DeleteModal from "../../components/ui/DeleteModal";
 
-function CategoryCard({ name, desc, type, spent, lastMonth, color }) {
+function CategoryCard({ category }) {
   const [deleteItem, setDeleteItem] = useState(false);
-  const percentage = (spent / lastMonth) * 100;
-  const upperType = type.toUpperCase();
+  const percentage = (category.spent / category.limit) * 100;
+  const upperType = category.type.toUpperCase();
   return (
     <>
       {deleteItem && (
         <DeleteModal
           title="Category"
-          name={name}
+          name={category.name}
           onClose={() => setDeleteItem(false)}
         />
       )}
@@ -22,10 +22,10 @@ function CategoryCard({ name, desc, type, spent, lastMonth, color }) {
           <div className="flex justify-between items-start">
             <div className="flex flex-col gap-1 min-w-0 flex-1">
               <h2 className="font-bold text-xl leading-tight line-clamp-1">
-                {name}
+                {category.name}
               </h2>
               <p className="text-[var(--text-secondary)] text-sm line-clamp-1">
-                {desc}
+                {category.desc}
               </p>
             </div>
             <div className="flex items-center gap-3 text-lg shrink-0 ml-3">
@@ -47,11 +47,11 @@ function CategoryCard({ name, desc, type, spent, lastMonth, color }) {
           </div>
           <div className="flex items-center justify-between">
             <p className="flex items-center text-sm">
-              Spent : <MdCurrencyRupee /> {spent}
+              Spent : <MdCurrencyRupee /> {category.spent}
             </p>
             <p className="flex items-center text-sm text-[var(--text-secondary)]">
               Limit : <MdCurrencyRupee />
-              {lastMonth}
+              {category.limit}
             </p>
           </div>
         </div>
@@ -59,7 +59,7 @@ function CategoryCard({ name, desc, type, spent, lastMonth, color }) {
         <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
           <div
             className="h-full rounded-full transition-all"
-            style={{ width: `${percentage}%`, backgroundColor: color }}
+            style={{ width: `${percentage}%`, backgroundColor: category.color }}
           />
         </div>
       </div>

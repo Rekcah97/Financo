@@ -33,15 +33,7 @@ function Categories() {
           }}
         >
           {category.map((cat) => (
-            <CategoryCard
-              key={cat.name}
-              name={cat.name}
-              desc={cat.desc}
-              type={cat.type}
-              spent={cat.spent}
-              lastMonth={cat.limit}
-              color={cat.color}
-            />
+            <CategoryCard key={cat.name} category={cat} />
           ))}
         </div>
       </div>
