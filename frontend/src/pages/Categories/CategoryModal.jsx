@@ -7,6 +7,7 @@ function CategoryModal({ mode = "create", categoryData = null, onClose }) {
   const [form, SetForm] = useState({
     name: isEdit ? categoryData.name : "",
     desc: isEdit ? categoryData.desc : "",
+    type: isEdit ? categoryData.type : "",
   });
 
   const onChange = (e) => {
@@ -63,7 +64,7 @@ function CategoryModal({ mode = "create", categoryData = null, onClose }) {
                   TYPE
                 </label>
                 <CustomSelect
-                  type={categoryData.type}
+                  type={form.type}
                   options={[
                     { value: "income", label: "INCOME" },
                     { value: "expense", label: "EXPENSE" },
