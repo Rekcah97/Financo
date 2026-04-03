@@ -3,13 +3,23 @@ import { MdCurrencyRupee } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
 import { LuPencil } from "react-icons/lu";
 import DeleteModal from "../../components/ui/DeleteModal";
-
+import CategoryModal from "./CategoryModal";
 function CategoryCard({ category }) {
+  const [isModalOpen, SetIsModalOpen] = useState(false);
   const [deleteItem, setDeleteItem] = useState(false);
   const percentage = (category.spent / category.limit) * 100;
   const upperType = category.type.toUpperCase();
   return (
     <>
+      {isModalOpen && (
+        <CategoryModal
+          mode="edit"
+          categoryData={category}
+          onClose={() => {
+            SetIsModalOpen(false);
+          }}
+        />
+      )}
       {deleteItem && (
         <DeleteModal
           title="Category"
@@ -29,7 +39,12 @@ function CategoryCard({ category }) {
               </p>
             </div>
             <div className="flex items-center gap-3 text-lg shrink-0 ml-3">
-              <button className="cursor-pointer hover:text-[var(--tertiary-dark)]">
+              <button
+                className="cursor-pointer hover:text-[var(--tertiary-dark)]"
+                onClick={() => {
+                  SetIsModalOpen(true);
+                }}
+              >
                 <LuPencil />
               </button>
               <button

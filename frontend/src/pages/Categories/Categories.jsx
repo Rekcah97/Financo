@@ -1,43 +1,59 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import CategoryContext from "../../context/CategoryContext";
 import { FaPlusCircle } from "react-icons/fa";
 import CategoryCard from "./CategoryCard";
+import CategoryModal from "./CategoryModal";
 function Categories() {
+  const [isModalOpen, SetIsModalOpen] = useState(false);
   const { category } = useContext(CategoryContext);
   return (
-    <div className="flex flex-col gap-7 ">
-      <div className="flex items-end w-full justify-between">
-        <div className="flex flex-col gap-2 ">
-          <h2 className=" font-bold text-5xl">Categories</h2>
-          <p className="text-[var(--text-secondary)]">
-            Curate your spending architecture. Define limits that align with
-            your lifestyle goals.
-          </p>
-        </div>
-        <div>
-          <button className="hidden sm:flex items-center text-[var(--primary)] cursor-pointer gap-2 bg-[var(--button)] px-7 py-4 rounded-3xl hover:opacity-80">
-            <FaPlusCircle className="text-xl" />
-            Create a New Category
-          </button>
-        </div>
-      </div>
-      <div className="flex flex-col gap-5 ">
-        <div>
-          <h3 className="font-bold text-2xl">Active Categories</h3>
-        </div>
-
-        <div
-          className="grid gap-5"
-          style={{
-            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+    <>
+      {isModalOpen && (
+        <CategoryModal
+          onClose={() => {
+            SetIsModalOpen(false);
           }}
-        >
-          {category.map((cat) => (
-            <CategoryCard key={cat.name} category={cat} />
-          ))}
+        />
+      )}
+      <div className="flex flex-col gap-7 ">
+        <div className="flex items-end w-full justify-between">
+          <div className="flex flex-col gap-2 ">
+            <h2 className=" font-bold text-5xl">Categories</h2>
+            <p className="text-[var(--text-secondary)]">
+              Curate your spending architecture. Define limits that align with
+              your lifestyle goals.
+            </p>
+          </div>
+          <div>
+            <button
+              className="hidden sm:flex items-center text-[var(--primary)] cursor-pointer gap-2 bg-[var(--button)] px-7 py-4 rounded-3xl hover:opacity-80"
+              onClick={() => {
+                SetIsModalOpen(true);
+              }}
+            >
+              <FaPlusCircle className="text-xl" />
+              Create a New Category
+            </button>
+          </div>
+        </div>
+        <div className="flex flex-col gap-5 ">
+          <div>
+            <h3 className="font-bold text-2xl">Active Categories</h3>
+          </div>
+
+          <div
+            className="grid gap-5"
+            style={{
+              gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+            }}
+          >
+            {category.map((cat) => (
+              <CategoryCard key={cat.name} category={cat} />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
