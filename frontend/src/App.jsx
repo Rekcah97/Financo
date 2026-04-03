@@ -4,14 +4,14 @@ import { CategoryProvider } from "./context/CategoryContext";
 import PrivateNavBar from "./components/NavBar/PrivateNavBar";
 import PublicNavBar from "./components/NavBar/PublicNavBar";
 import SideBar from "./components/layout/SideBar";
-import Login from "./components/auth/Login";
+import Login from "./pages/auth/Login";
 import Footer from "./components/layout/Footer";
-import Register from "./components/auth/Register";
+import Register from "./pages/auth/Register";
 import Categories from "./pages/Categories/Categories";
 import Goals from "./pages/Goals/Goals";
 
 function App() {
-  const log = true;
+  const log = false;
   return (
     <CategoryProvider>
       <GoalProvider>
@@ -31,9 +31,9 @@ function App() {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col h-screen overflow-hidden">
+            <div className="flex flex-col h-screen overflow-x-hidden">
               <PublicNavBar />
-              <div className="flex flex-1 overflow-hidden">
+              <div className="flex flex-1">
                 <Routes>
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
