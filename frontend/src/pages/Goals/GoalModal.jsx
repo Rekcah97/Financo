@@ -10,6 +10,7 @@ function GoalModal({ mode = "create", goalData = null, onClose }) {
     allocated: isEdit ? goalData.allocated : "",
     priority: isEdit ? goalData.priority : false,
   });
+  const [priority, SetPriority] = useState(form.priority);
   const onChange = (e) => {
     SetForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -83,7 +84,12 @@ function GoalModal({ mode = "create", goalData = null, onClose }) {
               <div className="flex justify-between p-4 bg-[#1f2a42] rounded-lg">
                 <p>Set as Priority Goal</p>
                 <label className="relative inline-block w-14 h-7">
-                  <input type="checkbox" className="opacity-0 w-0 h-0 peer" />
+                  <input
+                    type="checkbox"
+                    className="opacity-0 w-0 h-0 peer"
+                    checked={priority}
+                    onChange={(e) => SetPriority(!priority)}
+                  />
                   <span
                     className="absolute cursor-pointer inset-0 bg-gray-400 rounded-full transition-all duration-400 peer-checked:bg-[var(--primary)]
          before:content-[''] before:absolute before:h-6 before:w-6 before:left-0.5 before:bottom-0.5 
