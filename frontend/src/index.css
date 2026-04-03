@@ -16,6 +16,24 @@
   --input-box: #192540;
   --button: #242f4a;
 }
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+::-webkit-scrollbar-track {
+  background: #111827;
+}
 body {
   color: white;
   background: linear-gradient(

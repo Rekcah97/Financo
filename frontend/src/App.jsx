@@ -31,9 +31,9 @@ function App() {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col h-screen overflow-x-hidden">
+            <div className="flex flex-col h-screen overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
               <PublicNavBar />
-              <div className="flex flex-1 py-5">
+              <div className="flex flex-1 py-5 ">
                 <Routes>
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
