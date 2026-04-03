@@ -33,7 +33,7 @@ function App() {
           ) : (
             <div className="flex flex-col h-screen overflow-x-hidden">
               <PublicNavBar />
-              <div className="flex flex-1">
+              <div className="flex flex-1 py-5">
                 <Routes>
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />

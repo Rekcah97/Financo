@@ -18,7 +18,7 @@ function Login() {
               Login to proceed
             </p>{" "}
           </div>
-          <div className="flex flex-col bg-[var(--box-bg)] min-w-[90%] gap-5 rounded-xl py-4 px-4 shadow-2xl md:min-w-1/5 md:p-8 ">
+          <div className="flex flex-col bg-[var(--box-bg)] min-w-[90%] gap-5 rounded-xl py-4 px-4 shadow-2xl md:min-w-md md:p-8 ">
             <div className="flex flex-col gap-3">
               <label htmlFor="email">
                 <b className="text-[var(--text-secondary)]">EMAIL</b>

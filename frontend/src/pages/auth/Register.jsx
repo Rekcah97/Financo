@@ -21,7 +21,7 @@ function Register() {
           </h2>
           <p className="text-[var(--text-secondary)]">Signup to Proceed</p>
         </div>
-        <div className="flex flex-col bg-[var(--box-bg)] min-w-[90%] gap-5 rounded-xl py-4 px-4 shadow-2xl md:min-w-1/5 md:p-8">
+        <div className="flex flex-col bg-[var(--box-bg)] min-w-[90%] gap-5 rounded-xl py-4 px-4 shadow-2xl md:min-w-md md:p-8">
           <div className="flex flex-col gap-3">
             <label htmlFor="username">
               {" "}
@@ -35,7 +35,7 @@ function Register() {
               value={credential.username}
               required
               onChange={onChange}
-              className="input-box"
+              className="input-box bg-[var(--input-box)] focus:bg-[var(--element-bg-hover)]"
             />
             <label htmlFor="email">
               {" "}
@@ -49,7 +49,7 @@ function Register() {
               value={credential.email}
               required
               onChange={onChange}
-              className="input-box"
+              className="input-box bg-[var(--input-box)] focus:bg-[var(--element-bg-hover)]"
             />
             <label htmlFor="password">
               <b className="text-[var(--text-secondary)]">PASSWORD</b>
@@ -62,7 +62,7 @@ function Register() {
               value={credential.password}
               onChange={onChange}
               required
-              className="input-box"
+              className="input-box bg-[var(--input-box)] focus:bg-[var(--element-bg-hover)]"
             />
             <label htmlFor="confirmPassword">
               <b className="text-[var(--text-secondary)]">CONFIRM PASSWORD</b>
@@ -75,7 +75,7 @@ function Register() {
               value={credential.confirmPassword}
               onChange={onChange}
               required
-              className="input-box"
+              className="input-box bg-[var(--input-box)] focus:bg-[var(--element-bg-hover)]"
             />
           </div>
           <button
